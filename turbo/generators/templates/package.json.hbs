@@ -7,20 +7,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@ken/eslint-config": "workspace:*",
-    "@ken/prettier-config": "workspace:*",
     "@ken/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@ken/prettier-config"
+  }
 }

@@ -151,6 +151,7 @@ pnpm dev:backend    # convex dev — run this whenever editing backend functions
 pnpm dev:next       # web only
 pnpm ios / android  # mobile
 pnpm ui-add         # add a shadcn component to packages/ui
+pnpm turbo gen init # scaffold a new package under packages/
 pnpm test           # backend tests (Vitest + convex-test)
 pnpm lint / lint:fix / format / format:fix / typecheck
 ```

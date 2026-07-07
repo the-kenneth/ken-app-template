@@ -1,6 +1,8 @@
 {
-  "extends": "@ken/tsconfig/compiled-package.json",
-  "compilerOptions": {},
-  "include": ["*.ts", "src"],
+  "extends": "@ken/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
