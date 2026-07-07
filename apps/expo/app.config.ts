@@ -4,9 +4,9 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 // rewritten by `pnpm init:template` when you start a new project.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Acme",
-  slug: "acme-app",
-  scheme: "acme-app",
+  name: "Ken",
+  slug: "ken-app",
+  scheme: "ken-app",
   version: "0.1.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -25,11 +25,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
-    bundleIdentifier: "com.acme.app",
+    bundleIdentifier: "com.ken.app",
     supportsTablet: true,
   },
   android: {
-    package: "com.acme.app",
+    package: "com.ken.app",
     // Foreground and background must share dimensions (both 432x432 here);
     // monochrome drives the Android 13+ themed-icon variant.
     adaptiveIcon: {

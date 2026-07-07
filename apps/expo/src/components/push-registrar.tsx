@@ -5,7 +5,7 @@ import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 
-import { api } from "@acme/backend/convex/_generated/api";
+import { api } from "@ken/backend/convex/_generated/api";
 
 // How incoming notifications behave while the app is foregrounded.
 Notifications.setNotificationHandler({

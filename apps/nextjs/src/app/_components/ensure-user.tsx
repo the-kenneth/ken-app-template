@@ -3,7 +3,7 @@
 import { useConvexAuth, useMutation } from "convex/react";
 import { useEffect } from "react";
 
-import { api } from "@acme/backend/convex/_generated/api";
+import { api } from "@ken/backend/convex/_generated/api";
 
 /**
  * Upserts the Convex user doc as soon as a signed-in Clerk session exists.

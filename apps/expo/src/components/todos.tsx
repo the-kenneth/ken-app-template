@@ -13,8 +13,8 @@ import {
 
 import type { TodoFilter } from "~/stores/todo-filter";
 
-import { track } from "@acme/analytics";
-import { api } from "@acme/backend/convex/_generated/api";
+import { track } from "@ken/analytics";
+import { api } from "@ken/backend/convex/_generated/api";
 import { useTodoFilter } from "~/stores/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];

@@ -3,7 +3,7 @@
   "printWidth": 80,
   "sortPackageJson": false,
   "sortImports": {
-    "internalPattern": ["~/", "@acme/"],
+    "internalPattern": ["~/", "@ken/"],
     "groups": [
       "type-import",
       ["value-builtin", "value-external"],

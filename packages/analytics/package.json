@@ -1,5 +1,5 @@
 {
-  "name": "@acme/analytics",
+  "name": "@ken/analytics",
   "private": true,
   "type": "module",
   "exports": {
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
+    "@ken/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"
   }

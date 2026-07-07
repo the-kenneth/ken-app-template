@@ -1,5 +1,5 @@
 {
-  "name": "acme-app-template",
+  "name": "ken-app-template",
   "private": true,
   "engines": {
     "node": "^24.15.0",
@@ -11,10 +11,10 @@
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
     "dev": "turbo watch dev --continue",
-    "dev:next": "turbo watch dev -F @acme/nextjs...",
-    "dev:backend": "pnpm -F @acme/backend dev",
-    "android": "pnpm -F @acme/expo android",
-    "ios": "pnpm -F @acme/expo ios",
+    "dev:next": "turbo watch dev -F @ken/nextjs...",
+    "dev:backend": "pnpm -F @ken/backend dev",
+    "android": "pnpm -F @ken/expo android",
+    "ios": "pnpm -F @ken/expo ios",
     "format": "oxfmt --check",
     "format:fix": "oxfmt",
     "lint": "oxlint --type-aware",

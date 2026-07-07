@@ -2,8 +2,8 @@ import { useAction } from "convex/react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-import { track } from "@acme/analytics";
-import { api } from "@acme/backend/convex/_generated/api";
+import { track } from "@ken/analytics";
+import { api } from "@ken/backend/convex/_generated/api";
 
 /**
  * Demo: asks Convex to push a notification to all of this user's devices.

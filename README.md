@@ -4,7 +4,7 @@ A monorepo template for shipping a **web app, mobile app, and realtime backend**
 
 | Layer        | Tech                                                                                              |
 | ------------ | ------------------------------------------------------------------------------------------------- |
-| Web          | Next.js 16 (App Router), Tailwind v4, shadcn-style `@acme/ui`                                     |
+| Web          | Next.js 16 (App Router), Tailwind v4, shadcn-style `@ken/ui`                                      |
 | Mobile       | Expo SDK 57, expo-router, Reanimated, Gesture Handler, zustand, plain `StyleSheet`                |
 | Backend + DB | Convex (typed realtime queries/mutations, HTTP actions)                                           |
 | Auth         | Clerk — email/password + Google + Apple, on web and native                                        |
@@ -131,7 +131,7 @@ Cloud builds don't read your local `.env` — each profile in `eas.json` carries
 | `CLERK_WEBHOOK_SECRET`                                                    | **Convex dashboard**             | Clerk dashboard → Webhooks (see below)         |
 | EAS `projectId` + `updates.url`                                           | `apps/expo/app.config.ts`        | Created by `eas init` + `eas update:configure` |
 
-Placeholders rewritten by `pnpm init:template`: `@acme` package scope, `Acme` display name, `acme-app` slug/scheme, `com.acme.app` bundle ID.
+Placeholders rewritten by `pnpm init:template`: `@ken` package scope, `Ken` display name, `ken-app` slug/scheme, `com.ken.app` bundle ID.
 
 ## Production checklist
 

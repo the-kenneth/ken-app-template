@@ -1,5 +1,5 @@
 {
-  "name": "@acme/backend",
+  "name": "@ken/backend",
   "private": true,
   "type": "module",
   "exports": {
@@ -28,7 +28,7 @@
     "svix": "^1.96.1"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
+    "@ken/tsconfig": "workspace:*",
     "@edge-runtime/vm": "^5.0.0",
     "convex-test": "^0.0.54",
     "typescript": "catalog:",

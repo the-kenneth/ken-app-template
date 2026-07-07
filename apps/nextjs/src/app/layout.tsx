@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { cn } from "@acme/ui";
-import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
-import { Toaster } from "@acme/ui/toast";
+import { cn } from "@ken/ui";
+import { ThemeProvider, ThemeToggle } from "@ken/ui/theme";
+import { Toaster } from "@ken/ui/toast";
 import { env } from "~/env";
 
 import { ConvexClientProvider } from "./providers";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
       ? "https://example.com" // TODO: your production URL
       : "http://localhost:3000",
   ),
-  title: "Acme",
+  title: "Ken",
   description: "Web + mobile monorepo template (Next.js, Expo, Convex, Clerk)",
 };
 

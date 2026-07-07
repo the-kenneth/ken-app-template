@@ -5,11 +5,11 @@ import { useMutation, useQuery } from "convex/react";
 // same time to watch mutations sync live. Remove via `pnpm init:template`.
 import { useState } from "react";
 
-import { track } from "@acme/analytics";
-import { api } from "@acme/backend/convex/_generated/api";
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
-import { Input } from "@acme/ui/input";
+import { track } from "@ken/analytics";
+import { api } from "@ken/backend/convex/_generated/api";
+import { cn } from "@ken/ui";
+import { Button } from "@ken/ui/button";
+import { Input } from "@ken/ui/input";
 
 export function Todos() {
   const todos = useQuery(api.todos.list);

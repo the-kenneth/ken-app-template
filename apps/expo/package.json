@@ -1,5 +1,5 @@
 {
-  "name": "@acme/expo",
+  "name": "@ken/expo",
   "private": true,
   "main": "index.ts",
   "scripts": {
@@ -14,8 +14,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@acme/analytics": "workspace:*",
-    "@acme/backend": "workspace:*",
+    "@ken/analytics": "workspace:*",
+    "@ken/backend": "workspace:*",
     "@clerk/expo": "catalog:",
     "@sentry/react-native": "^8.17.2",
     "convex": "catalog:",
@@ -44,7 +44,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
+    "@ken/tsconfig": "workspace:*",
     "@types/react": "catalog:react19",
     "dotenv-cli": "^10.0.0",
     "typescript": "catalog:"

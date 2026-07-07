@@ -5,7 +5,7 @@
  *   pnpm init:template
  *
  * Prompts for your project details, then:
- *  - renames the @acme package scope everywhere
+ *  - renames the @ken package scope everywhere
  *  - sets the Expo app name, slug, scheme and iOS/Android bundle IDs
  *  - optionally deletes the realtime-todos demo feature
  *  - deletes itself when done
@@ -97,13 +97,13 @@ rl?.close();
 
 console.log("\nRewriting placeholders…");
 replaceInRepo([
-  ["@acme/", `@${scope}/`],
-  ["acme-app-template", `${slug}-monorepo`],
-  ['"acme-app"', `"${slug}"`],
-  ["com.acme.app", bundleId],
-  ['name: "Acme"', `name: "${displayName}"`],
-  ["Acme <span", `${displayName} <span`],
-  ['title: "Acme"', `title: "${displayName}"`],
+  ["@ken/", `@${scope}/`],
+  ["ken-app-template", `${slug}-monorepo`],
+  ['"ken-app"', `"${slug}"`],
+  ["com.ken.app", bundleId],
+  ['name: "Ken"', `name: "${displayName}"`],
+  ["Ken <span", `${displayName} <span`],
+  ['title: "Ken"', `title: "${displayName}"`],
 ]);
 
 if (removeDemo) {

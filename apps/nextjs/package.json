@@ -1,5 +1,5 @@
 {
-  "name": "@acme/nextjs",
+  "name": "@ken/nextjs",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,9 +11,9 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@acme/analytics": "workspace:*",
-    "@acme/backend": "workspace:*",
-    "@acme/ui": "workspace:*",
+    "@ken/analytics": "workspace:*",
+    "@ken/backend": "workspace:*",
+    "@ken/ui": "workspace:*",
     "@clerk/nextjs": "catalog:",
     "@sentry/nextjs": "^10.63.0",
     "@t3-oss/env-nextjs": "^0.13.8",
@@ -24,8 +24,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@ken/tailwind-config": "workspace:*",
+    "@ken/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
