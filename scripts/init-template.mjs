@@ -106,6 +106,21 @@ replaceInRepo([
   ['title: "Ken"', `title: "${displayName}"`],
 ]);
 
+// The README's template-meta parts don't belong in the new project: retitle
+// it and drop the "Start a new project" / placeholder-list sections.
+console.log("Updating README…");
+const readmePath = path.join(root, "README.md");
+let readme = fs.readFileSync(readmePath, "utf8");
+readme = readme
+  .replace(
+    "# App Template — Next.js + Expo + Convex + Clerk",
+    `# ${displayName}`,
+  )
+  .replace("A monorepo template for shipping", "A monorepo shipping")
+  .replace(/## Start a new project\n[\s\S]*?(?=^## )/m, "")
+  .replace(/\nPlaceholders rewritten by `pnpm init:template`[^\n]*\n/, "");
+fs.writeFileSync(readmePath, readme);
+
 if (removeDemo) {
   console.log("Removing the todos demo…");
   const demoFiles = [
