@@ -13,6 +13,7 @@ import {
 
 import type { TodoFilter } from "~/stores/todo-filter";
 
+import { track } from "@acme/analytics";
 import { api } from "@acme/backend/convex/_generated/api";
 import { useTodoFilter } from "~/stores/todo-filter";
 
@@ -29,6 +30,7 @@ export function Todos() {
   const onAdd = () => {
     if (text.trim().length === 0) return;
     void addTodo({ text });
+    track("todo_added", { platform: "mobile" });
     setText("");
   };
 

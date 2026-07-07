@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "convex/react";
 // same time to watch mutations sync live. Remove via `pnpm init:template`.
 import { useState } from "react";
 
+import { track } from "@acme/analytics";
 import { api } from "@acme/backend/convex/_generated/api";
 import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
@@ -21,6 +22,7 @@ export function Todos() {
     event.preventDefault();
     if (text.trim().length === 0) return;
     void addTodo({ text });
+    track("todo_added", { platform: "web" });
     setText("");
   };
 

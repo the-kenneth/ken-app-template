@@ -11,6 +11,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@acme/analytics": "workspace:*",
     "@acme/backend": "workspace:*",
     "@acme/ui": "workspace:*",
     "@clerk/nextjs": "catalog:",

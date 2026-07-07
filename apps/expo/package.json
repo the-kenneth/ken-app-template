@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@acme/analytics": "workspace:*",
     "@acme/backend": "workspace:*",
     "@clerk/expo": "catalog:",
     "convex": "catalog:",
