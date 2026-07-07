@@ -2,6 +2,7 @@ import { Show, useClerk, useUser } from "@clerk/expo";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { PushTestButton } from "~/components/push-test-button";
 import { SignInScreen } from "~/components/sign-in-screen";
 import { Todos } from "~/components/todos";
 
@@ -21,6 +22,7 @@ export default function Index() {
               <Text style={styles.signOut}>Sign out</Text>
             </TouchableOpacity>
           </View>
+          <PushTestButton />
           <Todos />
         </View>
       </Show>

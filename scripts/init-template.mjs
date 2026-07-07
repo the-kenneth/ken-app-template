@@ -134,6 +134,14 @@ export default defineSchema({
     email: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
   }).index("by_external_id", ["externalId"]),
+
+  // Expo push tokens, one row per device (a user can have several devices).
+  pushTokens: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_token", ["token"]),
 });
 `,
   );

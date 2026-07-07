@@ -8,18 +8,20 @@
  * @module
  */
 
+import type * as http from "../http.js";
+import type * as push from "../push.js";
+import type * as todos from "../todos.js";
+import type * as users from "../users.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-import type * as http from "../http.js";
-import type * as todos from "../todos.js";
-import type * as users from "../users.js";
-
 declare const fullApi: ApiFromModules<{
   http: typeof http;
+  push: typeof push;
   todos: typeof todos;
   users: typeof users;
 }>;

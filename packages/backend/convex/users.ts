@@ -92,6 +92,12 @@ export const deleteFromClerk = internalMutation({
       .collect();
     await Promise.all(todos.map((todo) => ctx.db.delete(todo._id)));
 
+    const pushTokens = await ctx.db
+      .query("pushTokens")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+    await Promise.all(pushTokens.map((row) => ctx.db.delete(row._id)));
+
     await ctx.db.delete(user._id);
   },
 });

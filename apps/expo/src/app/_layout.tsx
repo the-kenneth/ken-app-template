@@ -9,6 +9,7 @@ import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { EnsureUser } from "~/components/ensure-user";
+import { PushRegistrar } from "~/components/push-registrar";
 
 // Crash reporting. No-op unless EXPO_PUBLIC_SENTRY_DSN is set — enable per
 // project by adding the DSN to .env (see README).
@@ -47,6 +48,7 @@ function RootLayout() {
         <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <EnsureUser />
+            <PushRegistrar />
             <Stack
               screenOptions={{
                 headerShown: false,
