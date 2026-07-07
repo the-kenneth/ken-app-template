@@ -21,7 +21,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 // Interactive TTY → readline. Piped stdin (e.g. `printf "a\nb\n" | node …`)
 // → consume all lines up front, since readline drops lines that arrive
 // while no question is pending.
-const interactive = process.stdin.isTTY === true;
+const interactive = process.stdin.isTTY;
 const rl = interactive
   ? readline.createInterface({ input: process.stdin, output: process.stdout })
   : null;
@@ -110,6 +110,7 @@ if (removeDemo) {
   console.log("Removing the todos demo…");
   const demoFiles = [
     "packages/backend/convex/todos.ts",
+    "packages/backend/convex/todos.test.ts",
     "apps/nextjs/src/app/_components/todos.tsx",
     "apps/expo/src/components/todos.tsx",
     "apps/expo/src/stores/todo-filter.ts",

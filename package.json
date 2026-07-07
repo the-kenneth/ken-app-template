@@ -20,6 +20,7 @@
     "lint": "oxlint --type-aware",
     "lint:fix": "oxlint --type-aware --fix",
     "lint:ws": "pnpm dlx sherif@latest",
+    "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
     "init:template": "node scripts/init-template.mjs"

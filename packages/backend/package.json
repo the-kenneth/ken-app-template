@@ -18,7 +18,9 @@
     "dev": "convex dev",
     "deploy": "convex deploy",
     "dashboard": "convex dashboard",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@clerk/backend": "^3.11.0",
@@ -27,6 +29,9 @@
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
-    "typescript": "catalog:"
+    "@edge-runtime/vm": "^5.0.0",
+    "convex-test": "^0.0.54",
+    "typescript": "catalog:",
+    "vitest": "^4.1.10"
   }
 }
