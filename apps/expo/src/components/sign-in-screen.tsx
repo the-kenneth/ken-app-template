@@ -1,3 +1,6 @@
+import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
+import * as AuthSession from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
 import { useCallback, useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -8,9 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import * as AuthSession from "expo-auth-session";
-import * as WebBrowser from "expo-web-browser";
-import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
 
 // Required for the OAuth browser flow to close correctly.
 WebBrowser.maybeCompleteAuthSession();

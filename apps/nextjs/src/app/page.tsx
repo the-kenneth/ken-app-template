@@ -11,7 +11,7 @@ export default function HomePage() {
         <h1 className="text-5xl font-extrabold tracking-tight">
           Acme <span className="text-primary">Template</span>
         </h1>
-        <p className="text-muted-foreground text-center">
+        <p className="text-center text-muted-foreground">
           Next.js + Expo + Convex + Clerk
         </p>
 

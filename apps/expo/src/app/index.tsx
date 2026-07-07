@@ -1,6 +1,6 @@
+import { Show, useClerk, useUser } from "@clerk/expo";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Show, useClerk, useUser } from "@clerk/expo";
 
 import { SignInScreen } from "~/components/sign-in-screen";
 import { Todos } from "~/components/todos";

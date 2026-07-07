@@ -1,9 +1,9 @@
 "use client";
 
+import { useMutation, useQuery } from "convex/react";
 // Demo feature — realtime todos. Open this page on web and mobile at the
 // same time to watch mutations sync live. Remove via `pnpm init:template`.
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
 
 import { api } from "@acme/backend/convex/_generated/api";
 import { cn } from "@acme/ui";
@@ -47,7 +47,7 @@ export function Todos() {
           {todos.map((todo) => (
             <li
               key={todo._id}
-              className="bg-muted flex items-center gap-3 rounded-lg p-3"
+              className="flex items-center gap-3 rounded-lg bg-muted p-3"
             >
               <button
                 type="button"
@@ -55,7 +55,7 @@ export function Todos() {
                 aria-checked={todo.completed}
                 onClick={() => void toggleTodo({ id: todo._id })}
                 className={cn(
-                  "border-primary size-5 shrink-0 rounded border",
+                  "size-5 shrink-0 rounded border border-primary",
                   todo.completed && "bg-primary",
                 )}
               />

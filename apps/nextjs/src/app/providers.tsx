@@ -5,6 +5,7 @@ import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import { env } from "~/env";
+
 import { EnsureUser } from "./_components/ensure-user";
 
 const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);

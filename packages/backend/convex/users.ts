@@ -1,8 +1,10 @@
 import type { UserJSON } from "@clerk/backend";
 import type { Validator } from "convex/values";
+
 import { v } from "convex/values";
 
 import type { QueryCtx } from "./_generated/server";
+
 import { internalMutation, mutation, query } from "./_generated/server";
 
 /**

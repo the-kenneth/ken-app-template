@@ -11,8 +11,6 @@
     "ios": "pnpm with-env expo run:ios",
     "prebuild": "pnpm with-env expo prebuild",
     "with-env": "dotenv -e ../../.env --",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint --flag unstable_native_nodejs_ts_config",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -41,14 +39,9 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/react": "catalog:react19",
     "dotenv-cli": "^10.0.0",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

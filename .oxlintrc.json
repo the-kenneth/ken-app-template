@@ -1,0 +1,61 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "nextjs",
+    "import",
+    "node",
+    "promise"
+  ],
+  "jsPlugins": ["eslint-plugin-turbo"],
+  "options": {
+    "typeAware": true
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "turbo/no-undeclared-env-vars": "error",
+    "no-underscore-dangle": "off",
+    "import/no-unassigned-import": [
+      "warn",
+      { "allow": ["**/*.css", "expo-router/entry", "server-only"] }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-unsafe-type-assertion": "off",
+    "typescript/consistent-return": "off",
+    "no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "typescript/consistent-type-imports": [
+      "warn",
+      { "prefer": "type-imports", "fixStyle": "separate-type-imports" }
+    ],
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": [
+      "error",
+      { "checksVoidReturn": { "attributes": false } }
+    ],
+    "typescript/prefer-optional-chain": "warn",
+    "typescript/no-unnecessary-condition": [
+      "warn",
+      { "allowConstantLoopConditions": true }
+    ]
+  },
+  "ignorePatterns": [
+    "**/_generated/**",
+    "**/.next/**",
+    "**/.expo/**",
+    "**/dist/**",
+    "turbo/generators/**"
+  ]
+}

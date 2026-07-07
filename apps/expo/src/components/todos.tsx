@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from "convex/react";
 // Demo feature — realtime todos. Open web and mobile side by side to watch
 // mutations sync live. Remove via `pnpm init:template`.
 import { useState } from "react";
@@ -9,11 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useMutation, useQuery } from "convex/react";
-
-import { api } from "@acme/backend/convex/_generated/api";
 
 import type { TodoFilter } from "~/stores/todo-filter";
+
+import { api } from "@acme/backend/convex/_generated/api";
 import { useTodoFilter } from "~/stores/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];

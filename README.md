@@ -2,13 +2,13 @@
 
 A monorepo template for shipping a **web app, mobile app, and realtime backend** from one codebase. Based on [create-t3-turbo](https://github.com/t3-oss/create-t3-turbo), with the data layer swapped for [Convex](https://convex.dev) and auth swapped for [Clerk](https://clerk.com).
 
-| Layer | Tech |
-| --- | --- |
-| Web | Next.js 16 (App Router), Tailwind v4, shadcn-style `@acme/ui` |
-| Mobile | Expo SDK 57, expo-router, Reanimated, Gesture Handler, zustand, plain `StyleSheet` |
-| Backend + DB | Convex (typed realtime queries/mutations, HTTP actions) |
-| Auth | Clerk — email/password + Google + Apple, on web and native |
-| Tooling | pnpm workspaces + catalogs, Turborepo, ESLint, Prettier, TypeScript, GitHub Actions CI |
+| Layer        | Tech                                                                                              |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| Web          | Next.js 16 (App Router), Tailwind v4, shadcn-style `@acme/ui`                                     |
+| Mobile       | Expo SDK 57, expo-router, Reanimated, Gesture Handler, zustand, plain `StyleSheet`                |
+| Backend + DB | Convex (typed realtime queries/mutations, HTTP actions)                                           |
+| Auth         | Clerk — email/password + Google + Apple, on web and native                                        |
+| Tooling      | pnpm workspaces + catalogs, Turborepo, Oxlint (type-aware) + Oxfmt, TypeScript, GitHub Actions CI |
 
 ```text
 apps/
@@ -17,7 +17,7 @@ apps/
 packages/
   backend/       Convex functions: schema, users, todos, Clerk webhook
   ui/            Shared web UI components (shadcn-style, `pnpm ui-add`)
-tooling/         Shared eslint / prettier / tsconfig / tailwind presets
+tooling/         Shared tsconfig / tailwind presets (lint/format: root .oxlintrc.json + .oxfmtrc.json)
 ```
 
 ## Start a new project
@@ -29,13 +29,13 @@ tooling/         Shared eslint / prettier / tsconfig / tailwind presets
 
 ## Accounts you need
 
-| Account | Used for | Free tier |
-| --- | --- | --- |
-| [Convex](https://dashboard.convex.dev) | Database + backend functions | Yes |
-| [Clerk](https://dashboard.clerk.com) | Auth (create one app per project) | Yes |
-| [Expo / EAS](https://expo.dev) | Mobile builds, OTA updates | Yes |
-| [Vercel](https://vercel.com) | Web hosting (or any Next.js host) | Yes |
-| Apple Developer / Google Play | Store distribution (when you ship) | Paid |
+| Account                                | Used for                           | Free tier |
+| -------------------------------------- | ---------------------------------- | --------- |
+| [Convex](https://dashboard.convex.dev) | Database + backend functions       | Yes       |
+| [Clerk](https://dashboard.clerk.com)   | Auth (create one app per project)  | Yes       |
+| [Expo / EAS](https://expo.dev)         | Mobile builds, OTA updates         | Yes       |
+| [Vercel](https://vercel.com)           | Web hosting (or any Next.js host)  | Yes       |
+| Apple Developer / Google Play          | Store distribution (when you ship) | Paid      |
 
 ## First run (dev)
 
@@ -55,7 +55,7 @@ First run logs you into Convex, creates a dev deployment, and writes `CONVEX_DEP
 
 ### 3. Clerk
 
-1. Create an application at [dashboard.clerk.com](https://dashboard.clerk.com). Enable **Email/password**, **Google**, and **Apple** under *User & Authentication*. (Dev instances use Clerk's shared OAuth credentials — no Google/Apple console setup needed until production.)
+1. Create an application at [dashboard.clerk.com](https://dashboard.clerk.com). Enable **Email/password**, **Google**, and **Apple** under _User & Authentication_. (Dev instances use Clerk's shared OAuth credentials — no Google/Apple console setup needed until production.)
 2. Copy the **Publishable key** into `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`, and the **Secret key** into `CLERK_SECRET_KEY` (all in `.env`).
 3. Create a **JWT template** named exactly `convex` (Configure → JWT templates → New template → Convex preset).
 4. In the [Convex dashboard](https://dashboard.convex.dev) → Settings → Environment Variables, set `CLERK_JWT_ISSUER_DOMAIN` to your Clerk **Frontend API URL** (e.g. `https://verb-noun-00.clerk.accounts.dev`, shown on the JWT template page).
@@ -74,15 +74,15 @@ Sign up on one platform, open the other — the todos list syncs in realtime.
 
 ## All configuration values
 
-| Variable | Where it lives | Where to get it |
-| --- | --- | --- |
-| `CONVEX_DEPLOYMENT` | `.env` | Written by `pnpm dev:backend` |
-| `NEXT_PUBLIC_CONVEX_URL` / `EXPO_PUBLIC_CONVEX_URL` | `.env` (+ `eas.json` for builds) | Convex dashboard → deployment URL |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | `.env` (+ `eas.json` for builds) | Clerk dashboard → API keys |
-| `CLERK_SECRET_KEY` | `.env` / Vercel env | Clerk dashboard → API keys |
-| `CLERK_JWT_ISSUER_DOMAIN` | **Convex dashboard** | Clerk dashboard → JWT template page |
-| `CLERK_WEBHOOK_SECRET` | **Convex dashboard** | Clerk dashboard → Webhooks (see below) |
-| EAS `projectId` | `apps/expo/app.config.ts` | Created by `eas init` |
+| Variable                                                                  | Where it lives                   | Where to get it                        |
+| ------------------------------------------------------------------------- | -------------------------------- | -------------------------------------- |
+| `CONVEX_DEPLOYMENT`                                                       | `.env`                           | Written by `pnpm dev:backend`          |
+| `NEXT_PUBLIC_CONVEX_URL` / `EXPO_PUBLIC_CONVEX_URL`                       | `.env` (+ `eas.json` for builds) | Convex dashboard → deployment URL      |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | `.env` (+ `eas.json` for builds) | Clerk dashboard → API keys             |
+| `CLERK_SECRET_KEY`                                                        | `.env` / Vercel env              | Clerk dashboard → API keys             |
+| `CLERK_JWT_ISSUER_DOMAIN`                                                 | **Convex dashboard**             | Clerk dashboard → JWT template page    |
+| `CLERK_WEBHOOK_SECRET`                                                    | **Convex dashboard**             | Clerk dashboard → Webhooks (see below) |
+| EAS `projectId`                                                           | `apps/expo/app.config.ts`        | Created by `eas init`                  |
 
 Placeholders rewritten by `pnpm init:template`: `@acme` package scope, `Acme` display name, `acme-app` slug/scheme, `com.acme.app` bundle ID.
 
@@ -105,6 +105,8 @@ pnpm ios / android  # mobile
 pnpm ui-add         # add a shadcn component to packages/ui
 pnpm lint / lint:fix / format / format:fix / typecheck
 ```
+
+Linting is [Oxlint](https://oxc.rs) with type-aware rules (via `oxlint-tsgolint`); formatting is [Oxfmt](https://oxc.rs) with built-in import sorting and Tailwind class sorting — no ESLint/Prettier config to maintain. `turbo/no-undeclared-env-vars` still runs (the real `eslint-plugin-turbo`, loaded through oxlint's `jsPlugins`), so any `process.env.X` you reference must be declared in `turbo.json` `globalEnv` — this keeps env changes correctly invalidating Turborepo's build cache.
 
 ## How auth + data flow works
 
