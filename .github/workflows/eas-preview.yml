@@ -1,0 +1,52 @@
+# Continuous deployment for the mobile app, gated by native fingerprinting:
+# - JS-only change since the last preview build  → publish an OTA update to
+#   the `preview` channel (instant, free)
+# - Native change (new module, SDK bump, config) → start new EAS preview
+#   builds automatically (uses EAS build credits) and comment on the commit
+#
+# DISABLED by default so fresh clones don't fail CI. To enable:
+#   1. Create an Expo access token (https://expo.dev/settings/access-tokens)
+#      and add it as the EXPO_TOKEN repository secret.
+#   2. Run `eas init` + `eas update:configure` in apps/expo (see README).
+#   3. Set repository variable EAS_CI_ENABLED to `true`
+#      (Settings → Secrets and variables → Actions → Variables).
+#
+# Production OTA stays deliberate and manual:
+#   cd apps/expo && eas update --channel production --message "..."
+name: EAS Preview Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ vars.EAS_CI_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: pnpm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Fingerprint-gated deploy
+        uses: expo/expo-github-action/continuous-deploy-fingerprint@v8
+        with:
+          profile: preview
+          branch: preview
+          platform: all
+          working-directory: apps/expo
