@@ -1,0 +1,53 @@
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Show, useClerk, useUser } from "@clerk/expo";
+
+import { SignInScreen } from "~/components/sign-in-screen";
+import { Todos } from "~/components/todos";
+
+export default function Index() {
+  const { user } = useUser();
+  const { signOut } = useClerk();
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <Show when="signed-in" fallback={<SignInScreen />}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>
+              Hi, {user?.firstName ?? user?.emailAddresses[0]?.emailAddress}
+            </Text>
+            <TouchableOpacity onPress={() => void signOut()}>
+              <Text style={styles.signOut}>Sign out</Text>
+            </TouchableOpacity>
+          </View>
+          <Todos />
+        </View>
+      </Show>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+    gap: 16,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+  },
+  signOut: {
+    color: "#6366F1",
+    fontWeight: "600",
+  },
+});

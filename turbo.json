@@ -1,0 +1,63 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".cache/tsbuildinfo.json", "dist/**"]
+    },
+    "dev": {
+      "dependsOn": ["^dev"],
+      "cache": false,
+      "persistent": false
+    },
+    "codegen": {
+      "cache": false
+    },
+    "format": {
+      "outputs": [".cache/.prettiercache"],
+      "outputLogs": "new-only"
+    },
+    "lint": {
+      "dependsOn": ["^topo", "^build"],
+      "outputs": [".cache/.eslintcache"]
+    },
+    "typecheck": {
+      "dependsOn": ["^topo", "^build"],
+      "outputs": [".cache/tsbuildinfo.json"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "//#clean": {
+      "cache": false
+    },
+    "ui-add": {
+      "cache": false,
+      "interactive": true
+    }
+  },
+  "globalEnv": [
+    "CLERK_JWT_ISSUER_DOMAIN",
+    "CLERK_WEBHOOK_SECRET",
+    "CONVEX_DEPLOYMENT",
+    "NEXT_PUBLIC_CONVEX_URL",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+    "CLERK_SECRET_KEY",
+    "EXPO_PUBLIC_CONVEX_URL",
+    "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY",
+    "PORT"
+  ],
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "VERCEL",
+    "VERCEL_ENV",
+    "VERCEL_URL",
+    "EAS_BUILD",
+    "npm_lifecycle_event"
+  ]
+}

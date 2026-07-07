@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk read *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm -F @acme/expo typecheck)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm -F @acme/backend lint)",
+      "Bash(rtk lint *)",
+      "Bash(pnpm format *)",
+      "Bash(turbo run *)",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm -F @acme/nextjs build)"
+    ]
+  }
+}
