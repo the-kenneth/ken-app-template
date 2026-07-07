@@ -11,7 +11,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",
+  // EAS Update (OTA). Run `eas init` then `eas update:configure` in
+  // apps/expo — it fills in the projectId below and in extra.eas.
+  // OTA updates only reach binaries built with the same `version`
+  // (appVersion runtime policy): JS-only changes can ship OTA, anything
+  // touching native modules needs a new store build.
+  runtimeVersion: {
+    policy: "appVersion",
+  },
   updates: {
+    url: "https://u.expo.dev/your-eas-project-id",
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ["**/*"],

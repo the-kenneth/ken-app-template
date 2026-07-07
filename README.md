@@ -82,7 +82,7 @@ Sign up on one platform, open the other — the todos list syncs in realtime.
 | `CLERK_SECRET_KEY`                                                        | `.env` / Vercel env              | Clerk dashboard → API keys             |
 | `CLERK_JWT_ISSUER_DOMAIN`                                                 | **Convex dashboard**             | Clerk dashboard → JWT template page    |
 | `CLERK_WEBHOOK_SECRET`                                                    | **Convex dashboard**             | Clerk dashboard → Webhooks (see below) |
-| EAS `projectId`                                                           | `apps/expo/app.config.ts`        | Created by `eas init`                  |
+| EAS `projectId` + `updates.url`                                           | `apps/expo/app.config.ts`        | Created by `eas init` + `eas update:configure` |
 
 Placeholders rewritten by `pnpm init:template`: `@acme` package scope, `Acme` display name, `acme-app` slug/scheme, `com.acme.app` bundle ID.
 
@@ -92,8 +92,9 @@ Placeholders rewritten by `pnpm init:template`: `@acme` package scope, `Acme` di
 2. **Clerk production instance** — switch your Clerk app to production, add your domain. Configure real OAuth credentials: Google Cloud Console (OAuth client) and Apple Developer (Sign in with Apple service). Clerk's dashboard walks through both. Re-create the `convex` JWT template if prompted.
 3. **Clerk → Convex webhook** — Clerk dashboard → Webhooks → Add endpoint: `https://<your-prod-deployment>.convex.site/clerk-users-webhook`, subscribe to `user.created`, `user.updated`, `user.deleted`. Copy the signing secret into `CLERK_WEBHOOK_SECRET` in the Convex prod deployment. (Keeps profile edits/deletions in sync; the app works without it in dev.)
 4. **Web on Vercel** — import the repo, set root directory to `apps/nextjs`, add env vars (`NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — production values). Update `metadataBase` in `apps/nextjs/src/app/layout.tsx`.
-5. **Mobile via EAS** — `cd apps/expo && eas init` (writes `projectId` into `app.config.ts`), fill in the production env values in `eas.json`, then `eas build --profile production` and `eas submit`. Requires Apple Developer / Google Play accounts.
-6. **CI remote caching (optional)** — set `TURBO_TEAM` / `TURBO_TOKEN` repo secrets for Vercel remote caching.
+5. **Mobile via EAS** — `cd apps/expo && eas init` (writes `projectId` into `app.config.ts`) and `eas update:configure` (fills in `updates.url`), fill in the production env values in `eas.json`, then `eas build --profile production` and `eas submit`. Requires Apple Developer / Google Play accounts.
+6. **OTA updates (EAS Update)** — after a store build is live, ship JS-only changes instantly with `cd apps/expo && eas update --channel production --message "fix: …"`. Each build profile is pinned to a channel (`development`/`preview`/`production` in `eas.json`), and the `appVersion` runtime policy means an update only reaches binaries built from the same `version` in `app.config.ts`. **Rule of thumb:** changed only JS/TS? OTA is fine. Added/upgraded anything with native code (new Expo module, reanimated bump, SDK upgrade)? Bump `version` and do a store build.
+7. **CI remote caching (optional)** — set `TURBO_TEAM` / `TURBO_TOKEN` repo secrets for Vercel remote caching.
 
 ## Everyday commands
 
