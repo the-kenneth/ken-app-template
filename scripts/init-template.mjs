@@ -146,6 +146,27 @@ export default defineSchema({
 `,
   );
 
+  // _generated/api.d.ts is committed so typecheck works before the first
+  // `convex dev`; drop the todos module references it still carries.
+  // (Regenerated automatically once `pnpm dev:backend` runs.)
+  const apiTypesPath = path.join(
+    root,
+    "packages/backend/convex/_generated/api.d.ts",
+  );
+  let apiTypes = fs.readFileSync(apiTypesPath, "utf8");
+  apiTypes = apiTypes
+    .replace('import type * as todos from "../todos.js";\n', "")
+    .replace(/\n\s*todos: typeof todos;/, "");
+  fs.writeFileSync(apiTypesPath, apiTypes);
+
+  // analytics: drop the todos demo event and its doc example
+  const analyticsPath = path.join(root, "packages/analytics/src/index.ts");
+  let analytics = fs.readFileSync(analyticsPath, "utf8");
+  analytics = analytics
+    .replace(/\n\s*todo_added: \{ platform: Platform \};/, "")
+    .replaceAll('track("todo_added"', 'track("user_signed_in"');
+  fs.writeFileSync(analyticsPath, analytics);
+
   // users.ts: drop the todos cleanup inside deleteFromClerk
   const usersPath = path.join(root, "packages/backend/convex/users.ts");
   let users = fs.readFileSync(usersPath, "utf8");
