@@ -14,9 +14,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@clerk/expo": "catalog:",
     "@ken/analytics": "workspace:*",
     "@ken/backend": "workspace:*",
-    "@clerk/expo": "catalog:",
     "@sentry/react-native": "^8.17.2",
     "convex": "catalog:",
     "expo": "~57.0.2",

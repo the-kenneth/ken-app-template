@@ -19,7 +19,7 @@
     "format:fix": "oxfmt",
     "lint": "oxlint --type-aware",
     "lint:fix": "oxlint --type-aware --fix",
-    "lint:ws": "pnpm dlx sherif@latest",
+    "lint:ws": "sherif",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
@@ -32,6 +32,7 @@
     "oxfmt": "^0.58.0",
     "oxlint": "^1.73.0",
     "oxlint-tsgolint": "^0.24.0",
+    "sherif": "^1.13.0",
     "turbo": "^2.10.4",
     "typescript": "catalog:"
   }
