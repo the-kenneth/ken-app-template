@@ -160,7 +160,11 @@ Linting is [Oxlint](https://oxc.rs) with type-aware rules (via `oxlint-tsgolint`
 
 ## Testing
 
-Backend functions are tested with [convex-test](https://docs.convex.dev/testing/convex-test) + Vitest — a mock Convex backend runs your real schema and functions in-memory, including auth identities (`t.withIdentity(...)`). See `packages/backend/convex/*.test.ts` for the patterns (auth gating, ownership checks, webhook cascades). Run with `pnpm test`; CI runs it on every PR.
+Backend functions are tested with [convex-test](https://docs.convex.dev/testing/convex-test) + Vitest — a mock Convex backend runs your real schema and functions in-memory, including auth identities (`t.withIdentity(...)`). See `packages/backend/convex/*.test.ts` for the patterns (auth gating, ownership checks, webhook cascades).
+
+The web app has a Vitest + [Testing Library](https://testing-library.com/docs/react-testing-library/intro/) setup for component tests — see `apps/nextjs/src/app/error-pages.test.tsx` for the pattern (render, interact, mock modules like Sentry).
+
+Run everything with `pnpm test`; CI runs it on every PR.
 
 ## Error tracking (Sentry)
 
