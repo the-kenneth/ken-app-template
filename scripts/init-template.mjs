@@ -72,21 +72,42 @@ function slugify(value) {
     .replace(/(^-|-$)/g, "");
 }
 
-async function ask(question, fallback) {
-  const raw = rl
-    ? await rl.question(`${question} (${fallback}): `)
-    : (pipedAnswers.shift() ?? "");
-  const answer = raw.trim();
-  return answer.length > 0 ? answer : fallback;
+async function ask(question, fallback, validate) {
+  for (;;) {
+    const raw = rl
+      ? await rl.question(`${question} (${fallback}): `)
+      : (pipedAnswers.shift() ?? "");
+    const trimmed = raw.trim();
+    const answer = trimmed.length > 0 ? trimmed : fallback;
+    const problem = validate?.(answer);
+    if (!problem) return answer;
+    if (!rl) throw new Error(`Invalid answer "${answer}": ${problem}`);
+    console.log(`  ✗ ${problem}`);
+  }
 }
 
 const displayName = await ask("App display name", "My App");
 const defaultSlug = slugify(displayName);
-const slug = await ask("Slug / scheme (lowercase, dashes)", defaultSlug);
-const scope = await ask("Package scope (without @)", slug.replaceAll("-", ""));
+const slug = await ask("Slug / scheme (lowercase, dashes)", defaultSlug, (v) =>
+  /^[a-z](?:[a-z0-9-]*[a-z0-9])?$/.test(v)
+    ? undefined
+    : "use lowercase letters, digits and dashes, starting with a letter",
+);
+const scope = await ask(
+  "Package scope (without @)",
+  slug.replaceAll("-", ""),
+  (v) =>
+    /^[a-z0-9][a-z0-9._-]*$/.test(v)
+      ? undefined
+      : "npm scopes are lowercase letters, digits, ., _ and -",
+);
 const bundleId = await ask(
   "iOS bundle ID / Android package",
   `com.${scope}.app`,
+  (v) =>
+    /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/.test(v)
+      ? undefined
+      : "use reverse-DNS with 2+ dot-separated segments, each starting with a letter (Android forbids dashes)",
 );
 const removeDemo =
   (
@@ -96,7 +117,7 @@ const removeDemo =
 rl?.close();
 
 console.log("\nRewriting placeholders…");
-replaceInRepo([
+const replacements = [
   ["@ken/", `@${scope}/`],
   ["ken-app-template", `${slug}-monorepo`],
   ['"ken-app"', `"${slug}"`],
@@ -104,7 +125,8 @@ replaceInRepo([
   ['name: "Ken"', `name: "${displayName}"`],
   ["Ken <span", `${displayName} <span`],
   ['title: "Ken"', `title: "${displayName}"`],
-]);
+];
+replaceInRepo(replacements);
 
 // The README's template-meta parts don't belong in the new project: retitle
 // it and drop the "Start a new project" / placeholder-list sections.
@@ -221,6 +243,24 @@ const pkgPath = path.join(root, "package.json");
 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 delete pkg.scripts["init:template"];
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+
+// The rewrites above match exact literals, so drift in the template source
+// makes them silently no-op. Catch that here rather than in the new project.
+const leftovers = [];
+for (const file of walk(root)) {
+  const content = fs.readFileSync(file, "utf8");
+  for (const [from, to] of replacements) {
+    if (from !== to && content.includes(from)) {
+      leftovers.push(`  ${path.relative(root, file)}: ${from}`);
+    }
+  }
+}
+if (leftovers.length > 0) {
+  console.warn(
+    "\n⚠ Leftover template placeholders (fix these manually):\n" +
+      leftovers.join("\n"),
+  );
+}
 
 console.log(`
 Done! Next steps:
