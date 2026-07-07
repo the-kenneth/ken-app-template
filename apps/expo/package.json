@@ -17,6 +17,7 @@
     "@acme/analytics": "workspace:*",
     "@acme/backend": "workspace:*",
     "@clerk/expo": "catalog:",
+    "@sentry/react-native": "^8.17.2",
     "convex": "catalog:",
     "expo": "~57.0.2",
     "expo-auth-session": "~57.0.1",

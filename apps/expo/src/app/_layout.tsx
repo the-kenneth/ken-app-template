@@ -1,5 +1,6 @@
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
+import * as Sentry from "@sentry/react-native";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { Stack } from "expo-router";
@@ -8,6 +9,13 @@ import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { EnsureUser } from "~/components/ensure-user";
+
+// Crash reporting. No-op unless EXPO_PUBLIC_SENTRY_DSN is set — enable per
+// project by adding the DSN to .env (see README).
+const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+if (sentryDsn) {
+  Sentry.init({ dsn: sentryDsn, tracesSampleRate: 0.1 });
+}
 
 function requireEnv(value: string | undefined, name: string): string {
   if (!value) {
@@ -31,7 +39,7 @@ const convex = new ConvexReactClient(convexUrl, {
   unsavedChangesWarning: false,
 });
 
-export default function RootLayout() {
+function RootLayout() {
   const colorScheme = useColorScheme();
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
@@ -55,3 +63,5 @@ export default function RootLayout() {
     </ClerkProvider>
   );
 }
+
+export default sentryDsn ? Sentry.wrap(RootLayout) : RootLayout;

@@ -12,7 +12,8 @@
       },
       "env": {
         "EXPO_PUBLIC_CONVEX_URL": "https://YOUR-DEPLOYMENT.convex.cloud",
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_..."
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_...",
+        "EXPO_PUBLIC_SENTRY_DSN": ""
       }
     },
     "development": {
@@ -34,7 +35,8 @@
       "channel": "production",
       "env": {
         "EXPO_PUBLIC_CONVEX_URL": "https://YOUR-PROD-DEPLOYMENT.convex.cloud",
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_..."
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_live_...",
+        "EXPO_PUBLIC_SENTRY_DSN": ""
       }
     }
   },
