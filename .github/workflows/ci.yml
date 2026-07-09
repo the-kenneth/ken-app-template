@@ -66,3 +66,27 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  build:
+    runs-on: ubuntu-latest
+    # Parse-only fixtures: `next build` prerenders through ClerkProvider,
+    # which base64-decodes the publishable key (pk_test_<base64 domain>$) but
+    # never calls Clerk. Nothing here is a real credential — real values live
+    # in Vercel / eas.json. Exported env vars win over the copied .env
+    # (dotenv-cli doesn't override existing variables).
+    env:
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_Y2xlcmsuZXhhbXBsZS5jb20k # clerk.example.com$
+      CLERK_SECRET_KEY: sk_test_ci_parse_only_fixture
+      NEXT_PUBLIC_CONVEX_URL: https://ci-placeholder.convex.cloud
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
+
+      - name: Build
+        run: pnpm build
