@@ -1,3 +1,6 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { createJiti } from "jiti";
 
 const jiti = createJiti(import.meta.url);
@@ -9,6 +12,12 @@ await jiti.import("./src/env");
 const config = {
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: ["@ken/analytics", "@ken/backend", "@ken/ui"],
+
+  /**
+   * Pin the workspace root to the monorepo root. Without this, Next.js infers
+   * it by walking up for a lockfile and can pick a stray one in a parent dir.
+   */
+  turbopack: { root: join(dirname(fileURLToPath(import.meta.url)), "..", "..") },
 
   /** We already do linting and typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
