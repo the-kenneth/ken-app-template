@@ -36,7 +36,7 @@
     }
   },
   "globalEnv": [
-    "CLERK_JWT_ISSUER_DOMAIN",
+    "CLERK_FRONTEND_API_URL",
     "CLERK_WEBHOOK_SECRET",
     "CONVEX_DEPLOYMENT",
     "NEXT_PUBLIC_CONVEX_URL",

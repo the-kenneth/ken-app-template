@@ -59,9 +59,9 @@ First run logs you into Convex, creates a dev deployment, and writes `CONVEX_DEP
 ### 3. Clerk
 
 1. Create an application at [dashboard.clerk.com](https://dashboard.clerk.com). Enable **Email/password**, **Google**, and **Apple** under _User & Authentication_. (Dev instances use Clerk's shared OAuth credentials — no Google/Apple console setup needed until production.)
-2. Copy the **Publishable key** into `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`, and the **Secret key** into `CLERK_SECRET_KEY` (all in `.env`).
-3. Create a **JWT template** named exactly `convex` (Configure → JWT templates → New template → Convex preset).
-4. In the [Convex dashboard](https://dashboard.convex.dev) → Settings → Environment Variables, set `CLERK_JWT_ISSUER_DOMAIN` to your Clerk **Frontend API URL** (e.g. `https://verb-noun-00.clerk.accounts.dev`, shown on the JWT template page).
+2. Enable the **Convex integration** at [dashboard.clerk.com/apps/setup/convex](https://dashboard.clerk.com/apps/setup/convex). This provisions the JWT template named exactly `convex` **and generates your Frontend API URL** — the URL isn't available until the integration is enabled.
+3. Copy the **Publishable key** into `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`, and the **Secret key** into `CLERK_SECRET_KEY` (all in `.env`).
+4. In the [Convex dashboard](https://dashboard.convex.dev) → Settings → Environment Variables, set `CLERK_FRONTEND_API_URL` to the **Frontend API URL** shown on that integration page (e.g. `https://verb-noun-00.clerk.accounts.dev`).
 
 ### 4. Run the apps
 
@@ -127,7 +127,7 @@ Cloud builds don't read your local `.env` — each profile in `eas.json` carries
 | `NEXT_PUBLIC_CONVEX_URL` / `EXPO_PUBLIC_CONVEX_URL`                       | `.env` (+ `eas.json` for builds) | Convex dashboard → deployment URL              |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | `.env` (+ `eas.json` for builds) | Clerk dashboard → API keys                     |
 | `CLERK_SECRET_KEY`                                                        | `.env` / Vercel env              | Clerk dashboard → API keys                     |
-| `CLERK_JWT_ISSUER_DOMAIN`                                                 | **Convex dashboard**             | Clerk dashboard → JWT template page            |
+| `CLERK_FRONTEND_API_URL`                                                  | **Convex dashboard**             | Clerk dashboard → Convex integration           |
 | `CLERK_WEBHOOK_SECRET`                                                    | **Convex dashboard**             | Clerk dashboard → Webhooks (see below)         |
 | EAS `projectId` + `updates.url`                                           | `apps/expo/app.config.ts`        | Created by `eas init` + `eas update:configure` |
 
@@ -135,8 +135,8 @@ Placeholders rewritten by `pnpm init:template`: `@ken` package scope, `Ken` disp
 
 ## Production checklist
 
-1. **Convex prod deployment** — `cd packages/backend && npx convex deploy`. Set `CLERK_JWT_ISSUER_DOMAIN` (production value) in the prod deployment's env vars.
-2. **Clerk production instance** — switch your Clerk app to production, add your domain. Configure real OAuth credentials: Google Cloud Console (OAuth client) and Apple Developer (Sign in with Apple service). Clerk's dashboard walks through both. Re-create the `convex` JWT template if prompted.
+1. **Convex prod deployment** — `cd packages/backend && npx convex deploy`. Set `CLERK_FRONTEND_API_URL` (production value) in the prod deployment's env vars.
+2. **Clerk production instance** — switch your Clerk app to production, add your domain. Configure real OAuth credentials: Google Cloud Console (OAuth client) and Apple Developer (Sign in with Apple service). Clerk's dashboard walks through both. Re-enable the **Convex integration** on the production instance (it re-provisions the `convex` JWT template and gives you the production Frontend API URL for the prod Convex deployment).
 3. **Clerk → Convex webhook** — Clerk dashboard → Webhooks → Add endpoint: `https://<your-prod-deployment>.convex.site/clerk-users-webhook`, subscribe to `user.created`, `user.updated`, `user.deleted`. Copy the signing secret into `CLERK_WEBHOOK_SECRET` in the Convex prod deployment. (Keeps profile edits/deletions in sync; the app works without it in dev.)
 4. **Web on Vercel** — import the repo, set root directory to `apps/nextjs`, add env vars (`NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` — production values). Update `metadataBase` in `apps/nextjs/src/app/layout.tsx`.
 5. **Mobile via EAS** — one-time setup + credentials are covered in the [EAS section](#eas-builds-updates-and-credentials); for release: fill in the production env values in `eas.json`, then `eas build --profile production` and `eas submit`. Requires Apple Developer / Google Play accounts.

@@ -4,7 +4,7 @@ import { httpRouter } from "convex/server";
 import { Webhook } from "svix";
 
 import { internal } from "./_generated/api";
-import { httpAction } from "./_generated/server";
+import { env, httpAction } from "./_generated/server";
 
 const http = httpRouter();
 
@@ -51,7 +51,7 @@ http.route({
 });
 
 async function validateRequest(req: Request): Promise<WebhookEvent | null> {
-  const secret = process.env.CLERK_WEBHOOK_SECRET;
+  const secret = env.CLERK_WEBHOOK_SECRET;
   if (!secret) {
     console.error("CLERK_WEBHOOK_SECRET is not set in the Convex dashboard");
     return null;
