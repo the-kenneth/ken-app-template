@@ -19,6 +19,8 @@ catalogs:
     '@types/react-dom': ~19.2.3
     react: 19.2.3
     react-dom: 19.2.3
+  typescript5:
+    typescript: ^5.9.3
 
 linkWorkspacePackages: true
 
