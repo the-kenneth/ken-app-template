@@ -24,7 +24,7 @@ describe("todos", () => {
   test("add, toggle, remove round-trip", async () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
-    await asAda.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
 
     const id = await asAda.mutation(api.todos.add, { text: "write tests" });
     let todos = await asAda.query(api.todos.list, {});
@@ -43,8 +43,8 @@ describe("todos", () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
     const asBob = t.withIdentity(bob);
-    await asAda.mutation(api.users.ensureUser, {});
-    await asBob.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
+    await asBob.mutation(api.users.storeUser, {});
 
     const adasTodo = await asAda.mutation(api.todos.add, { text: "secret" });
 
@@ -60,7 +60,7 @@ describe("todos", () => {
   test("are cascaded when the user is deleted via the Clerk webhook", async () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
-    await asAda.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
     await asAda.mutation(api.todos.add, { text: "will be cascaded" });
 
     await t.mutation(internal.users.deleteFromClerk, {
@@ -75,7 +75,7 @@ describe("todos", () => {
   test("rejects empty text", async () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
-    await asAda.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
     await expect(
       t.withIdentity(ada).mutation(api.todos.add, { text: "   " }),
     ).rejects.toThrow("must not be empty");

@@ -191,6 +191,6 @@ Requirements: a **real device** (simulators can't receive push) and an EAS `proj
 ## How auth + data flow works
 
 - Both apps wrap the tree in `ClerkProvider` → `ConvexProviderWithClerk`, so every Convex call carries the Clerk JWT; functions read it via `ctx.auth.getUserIdentity()`.
-- `EnsureUser` (both apps) upserts a `users` row the moment a session exists — instant, reload-free, race-free.
+- `StoreUser` (both apps) upserts a `users` row the moment a session exists — instant, reload-free, race-free.
 - The Clerk webhook (`packages/backend/convex/http.ts`) syncs out-of-band profile edits and deletions.
 - The todos demo (`packages/backend/convex/todos.ts` + a component per app) shows the full pattern: authed queries, ownership checks, realtime updates, and zustand for client-only UI state on mobile.

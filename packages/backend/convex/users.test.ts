@@ -13,12 +13,12 @@ const ada = {
   email: "ada@example.com",
 };
 
-describe("users.ensureUser", () => {
+describe("users.storeUser", () => {
   test("creates the user from JWT claims on first call", async () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
 
-    await asAda.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
 
     const user = await asAda.query(api.users.current, {});
     expect(user).toMatchObject({
@@ -30,10 +30,10 @@ describe("users.ensureUser", () => {
 
   test("is idempotent and updates changed claims", async () => {
     const t = convexTest(schema, modules);
-    const first = await t.withIdentity(ada).mutation(api.users.ensureUser, {});
+    const first = await t.withIdentity(ada).mutation(api.users.storeUser, {});
     const second = await t
       .withIdentity({ ...ada, name: "Ada L." })
-      .mutation(api.users.ensureUser, {});
+      .mutation(api.users.storeUser, {});
 
     expect(second).toEqual(first);
     const user = await t.withIdentity(ada).query(api.users.current, {});
@@ -42,7 +42,7 @@ describe("users.ensureUser", () => {
 
   test("throws without an authenticated session", async () => {
     const t = convexTest(schema, modules);
-    await expect(t.mutation(api.users.ensureUser, {})).rejects.toThrow(
+    await expect(t.mutation(api.users.storeUser, {})).rejects.toThrow(
       "authenticated",
     );
   });
@@ -68,7 +68,7 @@ describe("Clerk webhook mutations", () => {
   test("deleteFromClerk removes the user", async () => {
     const t = convexTest(schema, modules);
     const asAda = t.withIdentity(ada);
-    await asAda.mutation(api.users.ensureUser, {});
+    await asAda.mutation(api.users.storeUser, {});
 
     await t.mutation(internal.users.deleteFromClerk, {
       clerkUserId: "clerk_ada",

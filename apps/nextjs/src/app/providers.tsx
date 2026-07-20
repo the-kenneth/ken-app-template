@@ -6,7 +6,7 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import { env } from "~/env";
 
-import { EnsureUser } from "./_components/ensure-user";
+import { StoreUser } from "./_components/store-user";
 
 const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);
 
@@ -17,7 +17,7 @@ const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL);
 export function ConvexClientProvider(props: { children: React.ReactNode }) {
   return (
     <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-      <EnsureUser />
+      <StoreUser />
       {props.children}
     </ConvexProviderWithClerk>
   );

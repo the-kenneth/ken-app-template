@@ -22,12 +22,12 @@ export const current = query({
  * soon as a signed-in session exists, so the user doc is available
  * immediately after sign-up (no reload, no webhook race).
  */
-export const ensureUser = mutation({
+export const storeUser = mutation({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (identity === null) {
-      throw new Error("ensureUser called without an authenticated session");
+      throw new Error("storeUser called without an authenticated session");
     }
 
     const attributes = {
