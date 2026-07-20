@@ -18,9 +18,14 @@ export const current = query({
 });
 
 /**
- * Upsert the current user from their Clerk JWT claims. Called by the apps as
- * soon as a signed-in session exists, so the user doc is available
+ * Create the current user's doc from their Clerk JWT claims. Called by the
+ * apps as soon as a signed-in session exists, so the user doc is available
  * immediately after sign-up (no reload, no webhook race).
+ *
+ * Deliberately insert-only. The apps call this on every mount, so patching
+ * here would overwrite in-app profile edits with stale JWT claims (claims are
+ * a snapshot from token-issue time) on the next app open. Profile fields are
+ * owned by the users table once the row exists — see schema.ts.
  */
 export const storeUser = mutation({
   args: {},
@@ -30,44 +35,51 @@ export const storeUser = mutation({
       throw new Error("storeUser called without an authenticated session");
     }
 
-    const attributes = {
+    const existing = await userByExternalId(ctx, identity.subject);
+    if (existing !== null) {
+      return existing._id;
+    }
+
+    return await ctx.db.insert("users", {
       externalId: identity.subject,
       name: identity.name ?? "Anonymous",
       email: identity.email,
       imageUrl: identity.pictureUrl,
-    };
-
-    const existing = await userByExternalId(ctx, identity.subject);
-    if (existing === null) {
-      return await ctx.db.insert("users", attributes);
-    }
-    await ctx.db.patch(existing._id, attributes);
-    return existing._id;
+    });
   },
 });
 
 /**
  * Called from the Clerk webhook (see http.ts) on user.created/user.updated.
- * Keeps profile edits made in Clerk in sync even while the app is closed.
+ *
+ * On create, seeds the whole row — this covers the case where the webhook
+ * lands before the app gets a chance to call `storeUser`.
+ *
+ * On update, patches the Clerk-owned mirrors (`email`, `imageUrl`) and leaves
+ * `name` alone — that one belongs to the users table and must survive
+ * out-of-band edits made in Clerk's own UI.
  */
 export const upsertFromClerk = internalMutation({
   args: { data: v.any() as Validator<UserJSON> },
   handler: async (ctx, { data }) => {
-    const attributes = {
-      externalId: data.id,
-      name:
-        [data.first_name, data.last_name].filter(Boolean).join(" ") ||
-        "Anonymous",
+    const mirrored = {
       email: data.email_addresses[0]?.email_address,
       imageUrl: data.image_url,
     };
 
     const existing = await userByExternalId(ctx, data.id);
     if (existing === null) {
-      await ctx.db.insert("users", attributes);
-    } else {
-      await ctx.db.patch(existing._id, attributes);
+      await ctx.db.insert("users", {
+        externalId: data.id,
+        name:
+          [data.first_name, data.last_name].filter(Boolean).join(" ") ||
+          "Anonymous",
+        ...mirrored,
+      });
+      return;
     }
+
+    await ctx.db.patch(existing._id, mirrored);
   },
 });
 

@@ -6,10 +6,13 @@ import { useEffect } from "react";
 import { api } from "@ken/backend/convex/_generated/api";
 
 /**
- * Upserts the Convex user doc as soon as a signed-in Clerk session exists.
+ * Creates the Convex user doc as soon as a signed-in Clerk session exists.
  * Runs reactively — fires immediately after sign-up/sign-in, no reload needed.
- * The Clerk webhook (packages/backend/convex/http.ts) covers out-of-band
- * profile updates and deletions.
+ *
+ * Safe to run on every mount: the mutation is insert-only, so it will not
+ * overwrite the stored profile with stale JWT claims. The Clerk webhook
+ * (packages/backend/convex/http.ts) keeps email/imageUrl fresh and handles
+ * deletions.
  */
 export function StoreUser() {
   const { isAuthenticated } = useConvexAuth();

@@ -28,7 +28,7 @@ describe("users.storeUser", () => {
     });
   });
 
-  test("is idempotent and updates changed claims", async () => {
+  test("is idempotent and never overwrites the stored profile", async () => {
     const t = convexTest(schema, modules);
     const first = await t.withIdentity(ada).mutation(api.users.storeUser, {});
     const second = await t
@@ -36,8 +36,9 @@ describe("users.storeUser", () => {
       .mutation(api.users.storeUser, {});
 
     expect(second).toEqual(first);
+    // Claims are a snapshot from token-issue time; the row wins.
     const user = await t.withIdentity(ada).query(api.users.current, {});
-    expect(user?.name).toBe("Ada L.");
+    expect(user?.name).toBe("Ada Lovelace");
   });
 
   test("throws without an authenticated session", async () => {
@@ -49,20 +50,41 @@ describe("users.storeUser", () => {
 });
 
 describe("Clerk webhook mutations", () => {
-  test("upsertFromClerk creates and updates users", async () => {
+  test("upsertFromClerk seeds the whole row when it does not exist yet", async () => {
     const t = convexTest(schema, modules);
 
     await t.mutation(internal.users.upsertFromClerk, {
-      data: clerkUser({ id: "clerk_ada", first_name: "Ada" }),
+      data: clerkUser({
+        id: "clerk_ada",
+        first_name: "Ada",
+        email: "ada@example.com",
+      }),
     });
-    let user = await t.withIdentity(ada).query(api.users.current, {});
-    expect(user?.name).toBe("Ada");
+
+    const user = await t.withIdentity(ada).query(api.users.current, {});
+    expect(user).toMatchObject({
+      externalId: "clerk_ada",
+      name: "Ada",
+      email: "ada@example.com",
+    });
+  });
+
+  test("upsertFromClerk patches the mirrors but leaves name alone", async () => {
+    const t = convexTest(schema, modules);
+    await t.withIdentity(ada).mutation(api.users.storeUser, {});
 
     await t.mutation(internal.users.upsertFromClerk, {
-      data: clerkUser({ id: "clerk_ada", first_name: "Countess" }),
+      data: clerkUser({
+        id: "clerk_ada",
+        first_name: "Countess",
+        email: "ada@lovelace.dev",
+      }),
     });
-    user = await t.withIdentity(ada).query(api.users.current, {});
-    expect(user?.name).toBe("Countess");
+
+    const user = await t.withIdentity(ada).query(api.users.current, {});
+    expect(user?.email).toBe("ada@lovelace.dev");
+    expect(user?.imageUrl).toBe("https://example.com/avatar.png");
+    expect(user?.name).toBe("Ada Lovelace");
   });
 
   test("deleteFromClerk removes the user", async () => {
@@ -78,13 +100,19 @@ describe("Clerk webhook mutations", () => {
   });
 });
 
-function clerkUser(overrides: { id: string; first_name: string }): UserJSON {
+function clerkUser(overrides: {
+  id: string;
+  first_name: string;
+  email?: string;
+}): UserJSON {
   return {
     object: "user",
     id: overrides.id,
     first_name: overrides.first_name,
     last_name: null,
-    email_addresses: [],
+    email_addresses: overrides.email
+      ? [{ email_address: overrides.email }]
+      : [],
     image_url: "https://example.com/avatar.png",
   } as unknown as UserJSON;
 }

@@ -4,8 +4,11 @@ import { useEffect } from "react";
 import { api } from "@ken/backend/convex/_generated/api";
 
 /**
- * Upserts the Convex user doc as soon as a signed-in Clerk session exists.
+ * Creates the Convex user doc as soon as a signed-in Clerk session exists.
  * Runs reactively — fires immediately after sign-up/sign-in, no reload needed.
+ *
+ * Safe to run on every mount: the mutation is insert-only, so it will not
+ * overwrite the stored profile with stale JWT claims.
  */
 export function StoreUser() {
   const { isAuthenticated } = useConvexAuth();

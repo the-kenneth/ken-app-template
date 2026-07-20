@@ -9,8 +9,11 @@ import { env, httpAction } from "./_generated/server";
 const http = httpRouter();
 
 /**
- * Clerk webhook — keeps Convex users in sync with out-of-band changes
- * (profile edits, deletions) made while the apps are closed.
+ * Clerk webhook — keeps the Clerk-owned mirrors (email, imageUrl) fresh and
+ * handles account deletion.
+ *
+ * `name` is owned by the users table and is NOT synced back from Clerk —
+ * see users.upsertFromClerk and schema.ts.
  *
  * Setup (per project, optional in dev — see README "Production checklist"):
  * 1. Clerk dashboard → Webhooks → Add endpoint:
