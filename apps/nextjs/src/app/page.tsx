@@ -1,8 +1,4 @@
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-
-import { Button } from "@ken/ui/button";
-
-import { Todos } from "./_components/todos";
+import { AuthGate } from "./_components/auth-gate";
 
 export default function HomePage() {
   return (
@@ -15,22 +11,7 @@ export default function HomePage() {
           Next.js + Expo + Convex + Clerk
         </p>
 
-        <Show
-          when="signed-in"
-          fallback={
-            <div className="flex gap-4">
-              <SignInButton mode="modal">
-                <Button>Sign in</Button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <Button variant="outline">Sign up</Button>
-              </SignUpButton>
-            </div>
-          }
-        >
-          <UserButton />
-          <Todos />
-        </Show>
+        <AuthGate />
       </div>
     </main>
   );

@@ -10,6 +10,7 @@ import { api } from "@ken/backend/convex/_generated/api";
 import { cn } from "@ken/ui";
 import { Button } from "@ken/ui/button";
 import { Input } from "@ken/ui/input";
+import { Skeleton } from "@ken/ui/skeleton";
 
 export function Todos() {
   const todos = useQuery(api.todos.list);
@@ -39,7 +40,13 @@ export function Todos() {
       </form>
 
       {todos === undefined ? (
-        <p className="text-muted-foreground">Loading…</p>
+        // h-14 matches a real row: p-3 plus the h-8 ghost delete button.
+        <div className="flex flex-col gap-2" role="status" aria-busy="true">
+          <span className="sr-only">Loading todos</span>
+          <Skeleton className="h-14 rounded-lg" />
+          <Skeleton className="h-14 rounded-lg" />
+          <Skeleton className="h-14 rounded-lg" />
+        </div>
       ) : todos.length === 0 ? (
         <p className="text-muted-foreground">
           Nothing yet. Add one here, watch it appear on mobile in realtime.

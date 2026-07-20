@@ -1,5 +1,12 @@
-import { Show, useClerk, useUser } from "@clerk/expo";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useClerk, useUser } from "@clerk/expo";
+import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { PushTestButton } from "~/components/push-test-button";
@@ -12,7 +19,17 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Show when="signed-in" fallback={<SignInScreen />}>
+      <AuthLoading>
+        <View style={styles.loading}>
+          <ActivityIndicator />
+        </View>
+      </AuthLoading>
+
+      <Unauthenticated>
+        <SignInScreen />
+      </Unauthenticated>
+
+      <Authenticated>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>
@@ -25,7 +42,7 @@ export default function Index() {
           <PushTestButton />
           <Todos />
         </View>
-      </Show>
+      </Authenticated>
     </SafeAreaView>
   );
 }
@@ -38,6 +55,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     gap: 16,
+  },
+  loading: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   header: {
     flexDirection: "row",

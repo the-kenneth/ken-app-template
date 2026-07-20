@@ -1,6 +1,6 @@
 import type { ErrorBoundaryProps } from "expo-router";
 
-import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/expo";
+import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import * as Sentry from "@sentry/react-native";
 import { ConvexReactClient } from "convex/react";
@@ -116,24 +116,21 @@ function RootLayout() {
   const colorScheme = useColorScheme();
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <ClerkLoaded>
-        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <StoreUser />
-            <PushRegistrar />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                contentStyle: {
-                  backgroundColor:
-                    colorScheme === "dark" ? "#09090B" : "#FFFFFF",
-                },
-              }}
-            />
-            <StatusBar />
-          </GestureHandlerRootView>
-        </ConvexProviderWithClerk>
-      </ClerkLoaded>
+      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StoreUser />
+          <PushRegistrar />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: {
+                backgroundColor: colorScheme === "dark" ? "#09090B" : "#FFFFFF",
+              },
+            }}
+          />
+          <StatusBar />
+        </GestureHandlerRootView>
+      </ConvexProviderWithClerk>
     </ClerkProvider>
   );
 }
