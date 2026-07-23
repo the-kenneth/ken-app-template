@@ -148,6 +148,7 @@ if (removeDemo) {
   const demoFiles = [
     "packages/backend/convex/todos.ts",
     "packages/backend/convex/todos.test.ts",
+    "packages/backend/convex/tables/todos.ts",
     "apps/nextjs/src/app/_components/todos.tsx",
     "apps/expo/src/components/todos.tsx",
     "apps/expo/src/stores/todo-filter.ts",
@@ -156,32 +157,13 @@ if (removeDemo) {
     fs.rmSync(path.join(root, file), { force: true });
   }
 
-  // schema.ts: drop the todos table
+  // schema.ts: drop the todos table (tables/todos.ts was deleted above)
   const schemaPath = path.join(root, "packages/backend/convex/schema.ts");
-  fs.writeFileSync(
-    schemaPath,
-    `import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-
-export default defineSchema({
-  users: defineTable({
-    // Clerk user ID (the JWT \`subject\` claim)
-    externalId: v.string(),
-    name: v.string(),
-    email: v.optional(v.string()),
-    imageUrl: v.optional(v.string()),
-  }).index("by_external_id", ["externalId"]),
-
-  // Expo push tokens, one row per device (a user can have several devices).
-  pushTokens: defineTable({
-    userId: v.id("users"),
-    token: v.string(),
-  })
-    .index("by_user", ["userId"])
-    .index("by_token", ["token"]),
-});
-`,
-  );
+  let schema = fs.readFileSync(schemaPath, "utf8");
+  schema = schema
+    .replace('import { todosTable } from "./tables/todos";\n', "")
+    .replace(/\n\s*todos: todosTable,/, "");
+  fs.writeFileSync(schemaPath, schema);
 
   // _generated/api.d.ts is committed so typecheck works before the first
   // `convex dev`; drop the todos module references it still carries.
