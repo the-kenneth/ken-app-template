@@ -4,8 +4,9 @@ A monorepo template for shipping a **web app, mobile app, and realtime backend**
 
 | Layer        | Tech                                                                                              |
 | ------------ | ------------------------------------------------------------------------------------------------- |
-| Web          | Next.js 16 (App Router), Tailwind v4, shadcn-style `@ken/ui`                                      |
-| Mobile       | Expo SDK 57, expo-router, Reanimated, Gesture Handler, zustand, plain `StyleSheet`                |
+| Web          | Next.js 16 (App Router), Tailwind v4, shadcn-style `@ken/ui-web`                                  |
+| Mobile       | Expo SDK 57, expo-router, Reanimated, Gesture Handler, zustand, `@ken/ui-mobile` (`StyleSheet`)   |
+| Design       | `@ken/tokens` — one hand-edited token source generating Tailwind CSS vars and RN values           |
 | Backend + DB | Convex (typed realtime queries/mutations, HTTP actions)                                           |
 | Auth         | Clerk — email/password + Google + Apple, on web and native                                        |
 | Tooling      | pnpm workspaces + catalogs, Turborepo, Oxlint (type-aware) + Oxfmt, TypeScript, GitHub Actions CI |
@@ -18,7 +19,9 @@ apps/
   expo/          Mobile app (custom auth screens, SSO, realtime todos demo)
 packages/
   backend/       Convex functions: schema, users, todos, push, Clerk webhook (+ tests)
-  ui/            Shared web UI components (shadcn-style, `pnpm ui-add`)
+  tokens/        Design tokens (source of truth) + shared cross-platform API contracts
+  ui-web/        Web UI components (shadcn-style, `pnpm ui-add`)
+  ui-mobile/     React Native UI mirroring ui-web's component API
   analytics/     Typed track() facade — plug in PostHog/Mixpanel per project
 tooling/         Shared tsconfig / tailwind presets (lint/format: root .oxlintrc.json + .oxfmtrc.json)
 ```
@@ -150,7 +153,8 @@ pnpm dev            # all dev tasks via turbo (backend + web)
 pnpm dev:backend    # convex dev — run this whenever editing backend functions
 pnpm dev:next       # web only
 pnpm ios / android  # mobile
-pnpm ui-add         # add a shadcn component to packages/ui
+pnpm ui-add         # add a shadcn component to packages/ui-web
+pnpm tokens:build   # regenerate theme.css + native tokens from packages/tokens/src
 pnpm turbo gen init # scaffold a new package under packages/
 pnpm test           # backend tests (Vitest + convex-test)
 pnpm lint / lint:fix / format / format:fix / typecheck

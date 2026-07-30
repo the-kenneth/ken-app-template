@@ -10,12 +10,14 @@ pnpm workspaces + Turborepo. One codebase ships a web app, a mobile app, and a r
 apps/nextjs/        Web app — Next.js 16 App Router, Clerk modal auth
 apps/expo/          Mobile app — Expo SDK 57, expo-router, custom auth screens
 packages/backend/   Convex functions: schema, tables, Clerk webhook (+ tests)
-packages/ui/        Shared web UI (shadcn-style, add via `pnpm ui-add`) — web only, not RN
+packages/tokens/    Design tokens (hand-edited) + shared cross-platform API contracts
+packages/ui-web/    Web UI (shadcn-style, add via `pnpm ui-add`) — DOM only, not RN
+packages/ui-mobile/ React Native UI mirroring ui-web's component API
 packages/analytics/ Typed track() facade (console in dev, no-op until a provider is set)
 tooling/            Shared tsconfig / tailwind presets
 ```
 
-Workspace packages are referenced as `@ken/*` (e.g. `@ken/backend`, `@ken/ui`). Shared dependency versions live in `pnpm-workspace.yaml` under `catalog:` / `catalogs:` — reference them as `"convex": "catalog:"` in package.json rather than pinning versions per package.
+Workspace packages are referenced as `@ken/*` (e.g. `@ken/backend`, `@ken/ui-web`). Shared dependency versions live in `pnpm-workspace.yaml` under `catalog:` / `catalogs:` — reference them as `"convex": "catalog:"` in package.json rather than pinning versions per package.
 
 ## Commands
 
@@ -32,7 +34,8 @@ pnpm typecheck       # tsc --noEmit across the graph
 pnpm lint / lint:fix # Oxlint (type-aware)
 pnpm format / format:fix  # Oxfmt (also sorts imports + Tailwind classes)
 pnpm lint:ws         # sherif — validates workspace/catalog consistency
-pnpm ui-add          # add a shadcn component to packages/ui
+pnpm ui-add          # add a shadcn component to packages/ui-web
+pnpm tokens:build    # regenerate theme.css + native tokens from packages/tokens/src
 ```
 
 Run a single backend test: `pnpm -F @ken/backend exec vitest run todos.test.ts`.
@@ -103,6 +106,19 @@ export default clerkMiddleware(async (auth, req) => {
 ```
 
 Middleware handles the redirect; the page itself should still preload with the token so it renders the signed-in user's data.
+
+## Design system (web + mobile)
+
+There is **no universal component runtime** — no react-native-web. Each platform has its own implementation; what's shared is the tokens and the API contract.
+
+- **`packages/tokens/src/` is hand-edited; everything else is generated.** `palette.ts` (oklch) and `scale.ts` (radius, spacing, shadows) are the source of truth. `pnpm tokens:build` emits `tooling/tailwind/theme.css` (oklch, for Tailwind) and `packages/tokens/src/__generated__/native.ts` (hex + RN shadow objects). Both outputs are committed and the generator is idempotent — never edit them by hand.
+- **Adopting a tweakcn theme:** export its CSS variables (Tailwind v4 / oklch) and run `pnpm -F @ken/tokens tokens:import <file.css>`, then `pnpm tokens:build`. Never paste CSS into `theme.css` — it is generated and will be overwritten.
+- **Component APIs are identical across platforms**, using shadcn's vocabulary (`variant="ghost"`, `size="sm"`), so `pnpm ui-add` output drops into `packages/ui-web` unmodified. Mobile types its props directly from `@ken/tokens/contracts`, so it cannot drift; web infers its props from cva, so drift is caught by an explicit assertion in `packages/ui-web/src/parity.ts`. **That file currently covers `Button` only** — it is the only variant-bearing component today, so any new one needs its own assertion added there or web-side drift goes unnoticed.
+- **Only the import differs:** `@ken/ui-web/button` vs `@ken/ui-mobile/button`. A component missing from mobile is a typecheck error, not a runtime crash.
+- **Mobile components read colours via `useTokens()`** and build styles in a `buildStyles(tokens)` factory memoised on the token object (which is referentially stable per scheme). Web components never need this — Tailwind resolves the same tokens through CSS variables.
+- **`useThemeMode()` exists on both platforms** with the same shape (`mode`, `resolvedMode`, `setMode`, `toggleMode`), backed by `localStorage` on web and MMKV on mobile — MMKV because its synchronous reads mean the saved theme is known before first paint.
+- **Not shared:** screens and layout (each app composes its own), typography (mobile's `Text` scale is deliberately mobile-only; web uses Tailwind's steps), and Toast / DropdownMenu / Field, which remain web-only.
+- Mirrored components: `Text` (mobile only), `Button`, `Input`, `Label`, `Separator`, `Skeleton`.
 
 ## Testing
 

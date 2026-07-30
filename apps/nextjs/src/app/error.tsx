@@ -3,7 +3,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 
-import { Button } from "@ken/ui/button";
+import { Button } from "@ken/ui-web/button";
 
 // Route-level error boundary: catches render errors below the root layout,
 // so the page chrome survives. Caught errors bypass Sentry's global handler,

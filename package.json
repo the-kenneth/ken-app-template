@@ -21,6 +21,7 @@
     "lint:fix": "oxlint --type-aware --fix",
     "lint:ws": "sherif",
     "test": "turbo run test",
+    "tokens:build": "turbo run tokens:build",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
     "init:template": "node scripts/init-template.mjs"

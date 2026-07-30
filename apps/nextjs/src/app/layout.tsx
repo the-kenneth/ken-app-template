@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { cn } from "@ken/ui";
-import { ThemeProvider, ThemeToggle } from "@ken/ui/theme";
-import { Toaster } from "@ken/ui/toast";
+import { cn } from "@ken/ui-web";
+import { ThemeProvider, ThemeToggle } from "@ken/ui-web/theme";
+import { Toaster } from "@ken/ui-web/toast";
 import { env } from "~/env";
 
 import { ConvexClientProvider } from "./providers";

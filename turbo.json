@@ -16,6 +16,9 @@
     "codegen": {
       "cache": false
     },
+    "tokens:build": {
+      "cache": false
+    },
     "test": {
       "dependsOn": ["^topo"]
     },

@@ -2,7 +2,7 @@
 
 import { Label as LabelPrimitive } from "radix-ui";
 
-import { cn } from "@ken/ui";
+import { cn } from "@ken/ui-web";
 
 export function Label({
   className,

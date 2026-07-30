@@ -1,4 +1,4 @@
-import { cn } from "@ken/ui";
+import { cn } from "@ken/ui-web";
 
 export function Input({
   className,

@@ -1,5 +1,10 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
+// `@ken/tokens/colors` rather than `/native`: Expo loads this file with plain
+// Node ESM, which cannot resolve the extensionless relative imports the latter
+// pulls in. The generated colour map has no runtime imports at all.
+import { nativeColors } from "@ken/tokens/colors";
+
 // All of the placeholder values below (name, slug, scheme, bundle IDs) are
 // rewritten by `pnpm init:template` when you start a new project.
 export default ({ config }: ConfigContext): ExpoConfig => ({
@@ -55,10 +60,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        backgroundColor: "#f0f4fb",
+        backgroundColor: nativeColors.light.muted,
         image: "./assets/icon.png",
         dark: {
-          backgroundColor: "#0f1317",
+          backgroundColor: nativeColors.dark.background,
         },
       },
     ],

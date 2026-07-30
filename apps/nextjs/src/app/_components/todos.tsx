@@ -7,10 +7,10 @@ import { useState } from "react";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
-import { cn } from "@ken/ui";
-import { Button } from "@ken/ui/button";
-import { Input } from "@ken/ui/input";
-import { Skeleton } from "@ken/ui/skeleton";
+import { cn } from "@ken/ui-web";
+import { Button } from "@ken/ui-web/button";
+import { Input } from "@ken/ui-web/input";
+import { Skeleton } from "@ken/ui-web/skeleton";
 
 export function Todos() {
   const todos = useQuery(api.todos.list);

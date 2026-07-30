@@ -3,7 +3,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 
-import { Button } from "@ken/ui/button";
+import { Button } from "@ken/ui-web/button";
 import "~/app/styles.css";
 
 // Last-resort boundary: rendered in place of the root layout when the layout

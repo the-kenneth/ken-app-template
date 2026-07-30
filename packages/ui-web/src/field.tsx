@@ -5,9 +5,9 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { useMemo } from "react";
 
-import { cn } from "@ken/ui";
-import { Label } from "@ken/ui/label";
-import { Separator } from "@ken/ui/separator";
+import { cn } from "@ken/ui-web";
+import { Label } from "@ken/ui-web/label";
+import { Separator } from "@ken/ui-web/separator";
 
 export function FieldSet({
   className,

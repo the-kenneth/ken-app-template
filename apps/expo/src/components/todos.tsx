@@ -1,20 +1,15 @@
 import { useMutation, useQuery } from "convex/react";
 // Demo feature — realtime todos. Open web and mobile side by side to watch
 // mutations sync live. Remove via `pnpm init:template`.
-import { useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useMemo, useState } from "react";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
+import type { Tokens } from "@ken/tokens/native";
 import type { TodoFilter } from "~/stores/todo-filter";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
+import { Button, Input, Skeleton, Text, useTokens } from "@ken/ui-mobile";
 import { useTodoFilter } from "~/stores/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];
@@ -26,6 +21,9 @@ export function Todos() {
   const removeTodo = useMutation(api.todos.remove);
   const { filter, setFilter } = useTodoFilter();
   const [text, setText] = useState("");
+
+  const tokens = useTokens();
+  const styles = useMemo(() => buildStyles(tokens), [tokens]);
 
   const onAdd = () => {
     if (text.trim().length === 0) return;
@@ -44,69 +42,84 @@ export function Todos() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputRow}>
-        <TextInput
-          style={styles.input}
-          value={text}
-          onChangeText={setText}
-          placeholder="What needs doing?"
-          onSubmitEditing={onAdd}
-          returnKeyType="done"
-        />
-        <TouchableOpacity style={styles.addButton} onPress={onAdd}>
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
+      <Text variant="h3">Todos</Text>
+
+      <View style={styles.row}>
+        <View style={styles.grow}>
+          <Input
+            value={text}
+            onChangeText={setText}
+            placeholder="What needs doing?"
+            onSubmitEditing={onAdd}
+            returnKeyType="done"
+          />
+        </View>
+        <Button onPress={onAdd}>Add</Button>
       </View>
 
-      <View style={styles.filterRow}>
-        {FILTERS.map((f) => (
-          <TouchableOpacity
-            key={f}
-            style={[styles.filterChip, filter === f && styles.filterChipActive]}
-            onPress={() => setFilter(f)}
+      {/* Client-only UI state, held in zustand rather than Convex. */}
+      <View style={styles.row}>
+        {FILTERS.map((option) => (
+          <Button
+            key={option}
+            size="sm"
+            variant={filter === option ? "default" : "outline"}
+            onPress={() => setFilter(option)}
           >
-            <Text
-              style={[
-                styles.filterChipText,
-                filter === f && styles.filterChipTextActive,
-              ]}
-            >
-              {f}
-            </Text>
-          </TouchableOpacity>
+            {option}
+          </Button>
         ))}
       </View>
 
       {todos === undefined ? (
-        <Text style={styles.muted}>Loading…</Text>
+        // `accessible` collapses the placeholders into one element, so
+        // VoiceOver announces the label instead of three anonymous views.
+        <View
+          style={styles.list}
+          accessible
+          accessibilityRole="progressbar"
+          accessibilityLabel="Loading todos"
+        >
+          <Skeleton style={styles.skeletonRow} />
+          <Skeleton style={styles.skeletonRow} />
+          <Skeleton style={styles.skeletonRow} />
+        </View>
       ) : (
         <FlatList
           data={visible}
           keyExtractor={(todo) => todo._id}
+          contentContainerStyle={styles.list}
           ListEmptyComponent={
-            <Text style={styles.muted}>
+            <Text tone="muted">
               Nothing here. Add one, or add one on the web app and watch it
               appear in realtime.
             </Text>
           }
           renderItem={({ item: todo }) => (
             <View style={styles.todoRow}>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.checkbox, todo.completed && styles.checkboxDone]}
                 onPress={() => void toggleTodo({ id: todo._id })}
+                // Brings the 20pt box up to the 44pt minimum tap target.
+                hitSlop={12}
                 accessibilityRole="checkbox"
+                accessibilityLabel={todo.text}
                 accessibilityState={{ checked: todo.completed }}
               />
               <Text
-                style={[styles.todoText, todo.completed && styles.todoTextDone]}
+                style={[styles.grow, todo.completed && styles.done]}
+                tone={todo.completed ? "muted" : "default"}
               >
                 {todo.text}
               </Text>
-              <TouchableOpacity
+              <Button
+                variant="ghost"
+                size="sm"
                 onPress={() => void removeTodo({ id: todo._id })}
+                accessibilityLabel={`Delete ${todo.text}`}
               >
-                <Text style={styles.delete}>✕</Text>
-              </TouchableOpacity>
+                ✕
+              </Button>
             </View>
           )}
         />
@@ -115,88 +128,29 @@ export function Todos() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 12,
-  },
-  inputRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#D4D4D8",
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 16,
-  },
-  addButton: {
-    backgroundColor: "#6366F1",
-    borderRadius: 10,
-    paddingHorizontal: 18,
-    justifyContent: "center",
-  },
-  addButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
-  },
-  filterRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  filterChip: {
-    borderWidth: 1,
-    borderColor: "#D4D4D8",
-    borderRadius: 999,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-  },
-  filterChipActive: {
-    backgroundColor: "#6366F1",
-    borderColor: "#6366F1",
-  },
-  filterChipText: {
-    color: "#3F3F46",
-    textTransform: "capitalize",
-  },
-  filterChipTextActive: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-  },
-  muted: {
-    color: "#71717A",
-  },
-  todoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingVertical: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#E4E4E7",
-  },
-  checkbox: {
-    width: 22,
-    height: 22,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: "#6366F1",
-  },
-  checkboxDone: {
-    backgroundColor: "#6366F1",
-  },
-  todoText: {
-    flex: 1,
-    fontSize: 16,
-  },
-  todoTextDone: {
-    color: "#A1A1AA",
-    textDecorationLine: "line-through",
-  },
-  delete: {
-    color: "#DC2626",
-    fontSize: 16,
-    padding: 4,
-  },
-});
+const buildStyles = (t: Tokens) =>
+  StyleSheet.create({
+    container: { flex: 1, gap: t.spacing * 3 },
+    row: { flexDirection: "row", alignItems: "center", gap: t.spacing * 2 },
+    grow: { flex: 1 },
+    list: { gap: t.spacing * 2 },
+    // Matches a real row: 12pt padding plus the 32pt sm button inside it.
+    skeletonRow: { height: 56, borderRadius: t.radius.lg },
+    todoRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing * 3,
+      padding: t.spacing * 3,
+      borderRadius: t.radius.lg,
+      backgroundColor: t.colors.muted,
+    },
+    checkbox: {
+      width: 20,
+      height: 20,
+      borderRadius: 4,
+      borderWidth: 1,
+      borderColor: t.colors.primary,
+    },
+    checkboxDone: { backgroundColor: t.colors.primary },
+    done: { textDecorationLine: "line-through" },
+  });

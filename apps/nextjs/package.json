@@ -16,7 +16,7 @@
     "@clerk/nextjs": "catalog:",
     "@ken/analytics": "workspace:*",
     "@ken/backend": "workspace:*",
-    "@ken/ui": "workspace:*",
+    "@ken/ui-web": "workspace:*",
     "@sentry/nextjs": "^10.63.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "convex": "catalog:",

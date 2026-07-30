@@ -1,0 +1,23 @@
+{
+  "name": "@ken/tokens",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./colors": "./src/__generated__/native.ts",
+    "./contracts": "./src/contracts.ts",
+    "./native": "./src/native.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "tokens:build": "node scripts/build.ts",
+    "tokens:import": "node scripts/import-theme.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@ken/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

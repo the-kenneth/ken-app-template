@@ -9,16 +9,17 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import {
+  Pressable,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  Text as RNText,
   useColorScheme,
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { StoreUser } from "~/components/store-user";
+import { resolveStoredTokens, ThemeProvider, useTokens } from "@ken/ui-mobile";
 import { PushRegistrar } from "~/components/push-registrar";
+import { StoreUser } from "~/components/store-user";
 
 // Crash reporting. No-op unless EXPO_PUBLIC_SENTRY_DSN is set — enable per
 // project by adding the DSN to .env (see README).
@@ -54,8 +55,10 @@ const convex = new ConvexReactClient(convexUrl, {
 // builds. Caught errors bypass Sentry's global handler, so report them here
 // (no-op without a DSN).
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
-  const colorScheme = useColorScheme();
-  const dark = colorScheme === "dark";
+  // Not useTokens(): a failure in the layout itself can leave this rendering
+  // outside the ThemeProvider. Still honours the saved choice — MMKV reads
+  // synchronously, so the stored mode is available without the provider.
+  const t = resolveStoredTokens(useColorScheme() === "dark" ? "dark" : "light");
 
   useEffect(() => {
     Sentry.captureException(error);
@@ -63,20 +66,35 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 
   return (
     <View
-      style={[
-        errorStyles.container,
-        { backgroundColor: dark ? "#09090B" : "#FFFFFF" },
-      ]}
+      style={[errorStyles.container, { backgroundColor: t.colors.background }]}
     >
-      <Text
-        style={[errorStyles.title, { color: dark ? "#FAFAFA" : "#18181B" }]}
-      >
+      <RNText style={[errorStyles.title, { color: t.colors.foreground }]}>
         Something went wrong
-      </Text>
-      <Text style={errorStyles.message}>{error.message}</Text>
-      <TouchableOpacity style={errorStyles.button} onPress={() => void retry()}>
-        <Text style={errorStyles.buttonText}>Try again</Text>
-      </TouchableOpacity>
+      </RNText>
+      <RNText
+        style={[errorStyles.message, { color: t.colors.mutedForeground }]}
+      >
+        {error.message}
+      </RNText>
+      <Pressable
+        onPress={() => void retry()}
+        style={[
+          errorStyles.button,
+          {
+            backgroundColor: t.colors.primary,
+            borderRadius: t.radius.md,
+          },
+        ]}
+      >
+        <RNText
+          style={[
+            errorStyles.buttonText,
+            { color: t.colors.primaryForeground },
+          ]}
+        >
+          Try again
+        </RNText>
+      </Pressable>
     </View>
   );
 }
@@ -95,40 +113,44 @@ const errorStyles = StyleSheet.create({
   },
   message: {
     fontSize: 14,
-    color: "#71717A",
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#6366F1",
-    borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 28,
     marginTop: 8,
   },
   buttonText: {
-    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
   },
 });
 
+function RootNavigator() {
+  const t = useTokens();
+  return (
+    <>
+      <StoreUser />
+      <PushRegistrar />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: t.colors.background },
+        }}
+      />
+      <StatusBar style={t.scheme === "dark" ? "light" : "dark"} />
+    </>
+  );
+}
+
 function RootLayout() {
-  const colorScheme = useColorScheme();
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <StoreUser />
-          <PushRegistrar />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: {
-                backgroundColor: colorScheme === "dark" ? "#09090B" : "#FFFFFF",
-              },
-            }}
-          />
-          <StatusBar />
+          <ThemeProvider>
+            <RootNavigator />
+          </ThemeProvider>
         </GestureHandlerRootView>
       </ConvexProviderWithClerk>
     </ClerkProvider>

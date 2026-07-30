@@ -3,8 +3,8 @@
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 
-import { Button } from "@ken/ui/button";
-import { Skeleton } from "@ken/ui/skeleton";
+import { Button } from "@ken/ui-web/button";
+import { Skeleton } from "@ken/ui-web/skeleton";
 
 import { Todos } from "./todos";
 

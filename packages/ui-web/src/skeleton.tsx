@@ -1,4 +1,4 @@
-import { cn } from "@ken/ui";
+import { cn } from "@ken/ui-web";
 
 /**
  * Placeholder block for content that is still loading. Size it to match the

@@ -1,0 +1,10 @@
+{
+  "extends": "@ken/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules"]
+}

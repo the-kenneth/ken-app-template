@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@ken/ui/button";
+import { Button } from "@ken/ui-web/button";
 
 export default function NotFound() {
   return (

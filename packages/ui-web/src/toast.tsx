@@ -4,14 +4,14 @@ import type { ToasterProps } from "sonner";
 
 import { Toaster as Sonner, toast } from "sonner";
 
-import { useTheme } from "./theme";
+import { useThemeMode } from "./theme";
 
 export const Toaster = ({ ...props }: ToasterProps) => {
-  const { themeMode } = useTheme();
+  const { mode } = useThemeMode();
 
   return (
     <Sonner
-      theme={themeMode === "auto" ? "system" : themeMode}
+      theme={mode === "auto" ? "system" : mode}
       className="toaster group"
       style={
         {

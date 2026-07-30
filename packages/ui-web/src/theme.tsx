@@ -4,6 +4,8 @@ import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 import * as z from "zod/v4";
 
+import type { ColorScheme, ThemeMode } from "@ken/tokens/contracts";
+
 import { Button } from "./button";
 import {
   DropdownMenu,
@@ -12,12 +14,16 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 
+// Parses untrusted localStorage; `satisfies` keeps it aligned with the shared
+// contract that @ken/ui-mobile implements too.
 const ThemeModeSchema = z.enum(["light", "dark", "auto"]);
+const _modeParity = null as unknown as z.output<
+  typeof ThemeModeSchema
+> satisfies ThemeMode;
 
 const themeKey = "theme-mode";
 
-export type ThemeMode = z.output<typeof ThemeModeSchema>;
-export type ResolvedTheme = Exclude<ThemeMode, "auto">;
+export type { ColorScheme, ThemeMode };
 
 const getStoredThemeMode = (): ThemeMode => {
   if (typeof window === "undefined") return "auto";
@@ -74,6 +80,9 @@ const getNextTheme = (current: ThemeMode): ThemeMode => {
 
 export const themeDetectorScript = (function () {
   function themeFn() {
+    // Must stay nested: themeFn is shipped as text via toString() and run by
+    // the browser, so anything defined outside it does not exist there.
+    // oxlint-disable-next-line unicorn/consistent-function-scoping
     const isValidTheme = (theme: string): theme is ThemeMode => {
       const validThemes = ["light", "dark", "auto"] as const;
       return validThemes.includes(theme as ThemeMode);
@@ -96,9 +105,9 @@ export const themeDetectorScript = (function () {
 })();
 
 interface ThemeContextProps {
-  themeMode: ThemeMode;
-  resolvedTheme: ResolvedTheme;
-  setTheme: (theme: ThemeMode) => void;
+  mode: ThemeMode;
+  resolvedMode: ColorScheme;
+  setMode: (mode: ThemeMode) => void;
   toggleMode: () => void;
 }
 const ThemeContext = React.createContext<ThemeContextProps | undefined>(
@@ -106,31 +115,31 @@ const ThemeContext = React.createContext<ThemeContextProps | undefined>(
 );
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
-  const [themeMode, setThemeMode] = React.useState(getStoredThemeMode);
+  const [mode, setModeState] = React.useState(getStoredThemeMode);
 
   React.useEffect(() => {
-    if (themeMode !== "auto") return;
+    if (mode !== "auto") return;
     return setupPreferredListener();
-  }, [themeMode]);
+  }, [mode]);
 
-  const resolvedTheme = themeMode === "auto" ? getSystemTheme() : themeMode;
+  const resolvedMode = mode === "auto" ? getSystemTheme() : mode;
 
-  const setTheme = (newTheme: ThemeMode) => {
-    setThemeMode(newTheme);
-    setStoredThemeMode(newTheme);
-    updateThemeClass(newTheme);
+  const setMode = (newMode: ThemeMode) => {
+    setModeState(newMode);
+    setStoredThemeMode(newMode);
+    updateThemeClass(newMode);
   };
 
   const toggleMode = () => {
-    setTheme(getNextTheme(themeMode));
+    setMode(getNextTheme(mode));
   };
 
   return (
     <ThemeContext
       value={{
-        themeMode,
-        resolvedTheme,
-        setTheme,
+        mode,
+        resolvedMode,
+        setMode,
         toggleMode,
       }}
     >
@@ -143,16 +152,16 @@ export function ThemeProvider({ children }: React.PropsWithChildren) {
   );
 }
 
-export function useTheme() {
+export function useThemeMode() {
   const context = React.use(ThemeContext);
   if (!context) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new Error("useThemeMode must be used within a ThemeProvider");
   }
   return context;
 }
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme();
+  const { setMode } = useThemeMode();
 
   return (
     <DropdownMenu>
@@ -169,13 +178,13 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setMode("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setMode("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("auto")}>
+        <DropdownMenuItem onClick={() => setMode("auto")}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
