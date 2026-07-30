@@ -21,6 +21,8 @@
   "ignorePatterns": [
     "**/_generated/**",
     "turbo/generators/templates/**",
-    "pnpm-lock.yaml"
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "**/CLAUDE.md"
   ]
 }
