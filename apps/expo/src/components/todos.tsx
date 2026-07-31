@@ -9,10 +9,32 @@ import type { TodoFilter } from "~/stores/todo-filter";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
-import { Button, Input, Skeleton, Text, useTokens } from "@ken/ui-mobile";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Input,
+  Skeleton,
+  Text,
+  useTokens,
+} from "@ken/ui-mobile";
 import { useTodoFilter } from "~/stores/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];
+
+const FILTER_LABELS: Record<TodoFilter, string> = {
+  all: "All",
+  active: "Active",
+  done: "Done",
+};
+
+const isTodoFilter = (value: string): value is TodoFilter =>
+  (FILTERS as string[]).includes(value);
 
 export function Todos() {
   const todos = useQuery(api.todos.list);
@@ -57,18 +79,32 @@ export function Todos() {
         <Button onPress={onAdd}>Add</Button>
       </View>
 
-      {/* Client-only UI state, held in zustand rather than Convex. */}
+      {/* Client-only UI state, held in zustand rather than Convex. The menu
+          itself is the same JSX as the web app's — only the import differs. */}
       <View style={styles.row}>
-        {FILTERS.map((option) => (
-          <Button
-            key={option}
-            size="sm"
-            variant={filter === option ? "default" : "outline"}
-            onPress={() => setFilter(option)}
-          >
-            {option}
-          </Button>
-        ))}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm">
+              Show: {FILTER_LABELS[filter]}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuLabel>Filter</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={filter}
+              onValueChange={(value) => {
+                if (isTodoFilter(value)) setFilter(value);
+              }}
+            >
+              {FILTERS.map((option) => (
+                <DropdownMenuRadioItem key={option} value={option}>
+                  {FILTER_LABELS[option]}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </View>
 
       {todos === undefined ? (
