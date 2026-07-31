@@ -57,7 +57,7 @@ cp .env.example .env
 pnpm dev:backend
 ```
 
-First run logs you into Convex, creates a dev deployment, and writes `CONVEX_DEPLOYMENT` into `.env`. Copy the printed deployment URL into `NEXT_PUBLIC_CONVEX_URL` **and** `EXPO_PUBLIC_CONVEX_URL` in `.env`. Keep this process running — it live-pushes function changes and regenerates types.
+First run logs you into Convex, creates a dev deployment, and writes `CONVEX_DEPLOYMENT` into `packages/backend/.env.local` — a file the Convex CLI owns and keeps up to date, so there is nothing to fill in there yourself. Copy the printed deployment URL into `NEXT_PUBLIC_CONVEX_URL` **and** `EXPO_PUBLIC_CONVEX_URL` in `.env`. Keep this process running — it live-pushes function changes and regenerates types.
 
 ### 3. Clerk
 
@@ -126,7 +126,7 @@ Cloud builds don't read your local `.env` — each profile in `eas.json` carries
 
 | Variable                                                                  | Where it lives                   | Where to get it                                |
 | ------------------------------------------------------------------------- | -------------------------------- | ---------------------------------------------- |
-| `CONVEX_DEPLOYMENT`                                                       | `.env`                           | Written by `pnpm dev:backend`                  |
+| `CONVEX_DEPLOYMENT`                                                       | `packages/backend/.env.local`    | Written by `pnpm dev:backend` — never edit     |
 | `NEXT_PUBLIC_CONVEX_URL` / `EXPO_PUBLIC_CONVEX_URL`                       | `.env` (+ `eas.json` for builds) | Convex dashboard → deployment URL              |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | `.env` (+ `eas.json` for builds) | Clerk dashboard → API keys                     |
 | `CLERK_SECRET_KEY`                                                        | `.env` / Vercel env              | Clerk dashboard → API keys                     |
