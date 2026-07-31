@@ -6,8 +6,8 @@ import type {
   ViewStyle,
 } from "react-native";
 
-import { Children, Fragment, useMemo } from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { useMemo } from "react";
+import { Pressable, StyleSheet } from "react-native";
 
 import type {
   ButtonSize,
@@ -16,6 +16,7 @@ import type {
 } from "@ken/tokens/contracts";
 import type { Tokens } from "@ken/tokens/native";
 
+import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
 import { withOpacity } from "./withOpacity";
 
@@ -74,48 +75,6 @@ const SIZES: Record<ButtonSize, ViewStyle> = {
   sm: { height: 32, paddingHorizontal: 12, gap: 6 },
   lg: { height: 40, paddingHorizontal: 24, gap: 8 },
   icon: { height: 36, width: 36, paddingHorizontal: 0, gap: 0 },
-};
-
-const isPrimitive = (child: ReactNode): child is string | number =>
-  typeof child === "string" || typeof child === "number";
-
-/**
- * Wraps bare text in `<Text>`, which React Native requires and the DOM does
- * not — without this, `<Button>Add {n} items</Button>` renders identically on
- * web and throws at runtime on native.
- *
- * Consecutive primitives are grouped into a single `<Text>` so interpolated
- * strings read as one run, while element children (icons) stay siblings of it
- * and keep the container's `gap` spacing.
- */
-const renderChildren = (children: ReactNode, style: TextStyle): ReactNode => {
-  const items = Children.toArray(children);
-  if (!items.some(isPrimitive)) return children;
-
-  const output: ReactNode[] = [];
-  let run: (string | number)[] = [];
-
-  const flush = () => {
-    if (run.length === 0) return;
-    output.push(
-      <Text key={`text-${output.length}`} style={style}>
-        {run}
-      </Text>,
-    );
-    run = [];
-  };
-
-  for (const item of items) {
-    if (isPrimitive(item)) {
-      run.push(item);
-      continue;
-    }
-    flush();
-    output.push(<Fragment key={`node-${output.length}`}>{item}</Fragment>);
-  }
-  flush();
-
-  return output;
 };
 
 export interface ButtonProps extends Omit<PressableProps, "style"> {

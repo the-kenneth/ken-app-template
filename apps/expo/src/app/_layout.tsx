@@ -17,7 +17,12 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { resolveStoredTokens, ThemeProvider, useTokens } from "@ken/ui-mobile";
+import {
+  PortalHost,
+  resolveStoredTokens,
+  ThemeProvider,
+  useTokens,
+} from "@ken/ui-mobile";
 import { PushRegistrar } from "~/components/push-registrar";
 import { StoreUser } from "~/components/store-user";
 
@@ -150,6 +155,10 @@ function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider>
             <RootNavigator />
+            {/* Must sit inside ThemeProvider: rn-primitives' Portal renders
+                children at the host's position, so portalled menus resolve
+                context from here, not from where they are declared. */}
+            <PortalHost />
           </ThemeProvider>
         </GestureHandlerRootView>
       </ConvexProviderWithClerk>

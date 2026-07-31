@@ -8,6 +8,23 @@
  */
 export { Button } from "./button";
 export type { ButtonProps } from "./button";
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
 export { Input } from "./input";
 export type { InputProps } from "./input";
 export { Label } from "./label";
@@ -26,3 +43,6 @@ export {
 } from "./theme";
 export type { ThemeModeContextValue } from "./theme";
 export { withOpacity } from "./withOpacity";
+// Re-exported so apps mount the portal host without depending on
+// rn-primitives directly. Required by DropdownMenu.
+export { PortalHost } from "@rn-primitives/portal";

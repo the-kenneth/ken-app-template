@@ -64,6 +64,9 @@ export type ButtonSize = "default" | "sm" | "lg" | "icon";
 
 export type SeparatorOrientation = "horizontal" | "vertical";
 
+/** Shared by DropdownMenu items on both platforms. */
+export type MenuItemVariant = "default" | "destructive";
+
 export type RadiusToken = "sm" | "md" | "lg" | "xl";
 
 export type ShadowToken =

@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./button": "./src/button.tsx",
+    "./dropdown-menu": "./src/dropdown-menu.tsx",
     "./input": "./src/input.tsx",
     "./label": "./src/label.tsx",
     "./separator": "./src/separator.tsx",
@@ -18,7 +19,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ken/tokens": "workspace:*"
+    "@ken/tokens": "workspace:*",
+    "@rn-primitives/dropdown-menu": "^1.5.2",
+    "@rn-primitives/portal": "^1.5.2"
   },
   "devDependencies": {
     "@ken/tsconfig": "workspace:*",
