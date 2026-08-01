@@ -32,6 +32,7 @@ const IGNORED_DIRS = new Set([
   ".git",
   ".next",
   ".expo",
+  ".convex",
   ".turbo",
   ".cache",
   "dist",
@@ -41,21 +42,26 @@ const IGNORED_DIRS = new Set([
   "_generated",
 ]);
 
-function* walk(dir) {
+const REWRITABLE = /\.(ts|tsx|mts|js|jsx|mjs|json|yaml|yml|md|css|hbs)$/;
+
+// The leftover audit reads everything that isn't one of these, so a file type
+// missing from REWRITABLE gets reported rather than shipping a stale placeholder.
+const BINARY =
+  /\.(png|jpe?g|gif|webp|avif|ico|icns|ttf|otf|woff2?|mp4|mov|zip|gz|pdf|sqlite3?|db|keystore|jks)$/i;
+
+function* walk(dir, matches) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       if (!IGNORED_DIRS.has(entry.name))
-        yield* walk(path.join(dir, entry.name));
-    } else if (
-      /\.(ts|tsx|mts|js|jsx|mjs|json|yaml|yml|md|hbs)$/.test(entry.name)
-    ) {
+        yield* walk(path.join(dir, entry.name), matches);
+    } else if (matches(entry.name)) {
       yield path.join(dir, entry.name);
     }
   }
 }
 
 function replaceInRepo(replacements) {
-  for (const file of walk(root)) {
+  for (const file of walk(root, (name) => REWRITABLE.test(name))) {
     const original = fs.readFileSync(file, "utf8");
     let updated = original;
     for (const [from, to] of replacements) {
@@ -63,6 +69,51 @@ function replaceInRepo(replacements) {
     }
     if (updated !== original) fs.writeFileSync(file, updated);
   }
+}
+
+// A renamed scope lands in a different alphabetical slot than @ken did, and
+// sherif (`pnpm lint:ws`) fails CI on unsorted dependency blocks.
+function sortDependencyBlocks() {
+  const blocks = [
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "optionalDependencies",
+  ];
+  for (const file of walk(root, (name) => name === "package.json")) {
+    const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
+    let changed = false;
+    for (const block of blocks) {
+      const entries = Object.entries(pkg[block] ?? {});
+      const sorted = entries.toSorted(([a], [b]) =>
+        a < b ? -1 : a > b ? 1 : 0,
+      );
+      if (sorted.some(([key], i) => key !== entries[i][0])) {
+        pkg[block] = Object.fromEntries(sorted);
+        changed = true;
+      }
+    }
+    if (changed) fs.writeFileSync(file, JSON.stringify(pkg, null, 2) + "\n");
+  }
+}
+
+// Drift between the template and this script's exact-literal edits, collected
+// rather than thrown so one stale pattern doesn't abandon a half-renamed repo.
+const warnings = [];
+
+function editFile(relPath, edits) {
+  const filePath = path.join(root, relPath);
+  let content = fs.readFileSync(filePath, "utf8");
+  for (const [pattern, replacement] of edits) {
+    const updated =
+      typeof pattern === "string"
+        ? content.replaceAll(pattern, replacement)
+        : content.replace(pattern, replacement);
+    if (updated === content)
+      warnings.push(`  ${relPath}: no match for ${pattern}`);
+    content = updated;
+  }
+  fs.writeFileSync(filePath, content);
 }
 
 function slugify(value) {
@@ -127,6 +178,7 @@ const replacements = [
   ['title: "Ken"', `title: "${displayName}"`],
 ];
 replaceInRepo(replacements);
+sortDependencyBlocks();
 
 // The README's template-meta parts don't belong in the new project: retitle
 // it and drop the "Start a new project" / placeholder-list sections.
@@ -158,58 +210,44 @@ if (removeDemo) {
   }
 
   // schema.ts: drop the todos table (tables/todos.ts was deleted above)
-  const schemaPath = path.join(root, "packages/backend/convex/schema.ts");
-  let schema = fs.readFileSync(schemaPath, "utf8");
-  schema = schema
-    .replace('import { todosTable } from "./tables/todos";\n', "")
-    .replace(/\n\s*todos: todosTable,/, "");
-  fs.writeFileSync(schemaPath, schema);
+  editFile("packages/backend/convex/schema.ts", [
+    ['import { todosTable } from "./tables/todos";\n', ""],
+    [/\n\s*todos: todosTable,/, ""],
+  ]);
 
   // _generated/api.d.ts is committed so typecheck works before the first
   // `convex dev`; drop the todos module references it still carries.
   // (Regenerated automatically once `pnpm dev:backend` runs.)
-  const apiTypesPath = path.join(
-    root,
-    "packages/backend/convex/_generated/api.d.ts",
-  );
-  let apiTypes = fs.readFileSync(apiTypesPath, "utf8");
-  apiTypes = apiTypes
-    .replace('import type * as todos from "../todos.js";\n', "")
-    .replace(/\n\s*todos: typeof todos;/, "");
-  fs.writeFileSync(apiTypesPath, apiTypes);
+  editFile("packages/backend/convex/_generated/api.d.ts", [
+    ['import type * as todos from "../todos.js";\n', ""],
+    [/\n\s*todos: typeof todos;/, ""],
+  ]);
 
   // analytics: drop the todos demo event and its doc example
-  const analyticsPath = path.join(root, "packages/analytics/src/index.ts");
-  let analytics = fs.readFileSync(analyticsPath, "utf8");
-  analytics = analytics
-    .replace(/\n\s*todo_added: \{ platform: Platform \};/, "")
-    .replaceAll('track("todo_added"', 'track("user_signed_in"');
-  fs.writeFileSync(analyticsPath, analytics);
+  editFile("packages/analytics/src/index.ts", [
+    [/\n\s*todo_added: \{ platform: Platform \};/, ""],
+    ['track("todo_added"', 'track("user_signed_in"'],
+  ]);
 
   // users.ts: drop the todos cleanup inside deleteFromClerk
-  const usersPath = path.join(root, "packages/backend/convex/users.ts");
-  let users = fs.readFileSync(usersPath, "utf8");
-  users = users.replace(
-    /\n    const todos = await ctx\.db[\s\S]*?todos\.map\(\(todo\) => ctx\.db\.delete\(todo\._id\)\)\);\n/,
-    "\n",
-  );
-  fs.writeFileSync(usersPath, users);
+  editFile("packages/backend/convex/users.ts", [
+    [
+      /\n    const todos = await ctx\.db[\s\S]*?todos\.map\(\(todo\) => ctx\.db\.delete\(todo\._id\)\)\);\n/,
+      "\n",
+    ],
+  ]);
 
-  // Next.js page: drop the todos import and usage
-  const pagePath = path.join(root, "apps/nextjs/src/app/page.tsx");
-  let page = fs.readFileSync(pagePath, "utf8");
-  page = page
-    .replace(/\nimport { Todos } from ".\/_components\/todos";\n/, "\n")
-    .replace(/\n\s*<Todos \/>/, "");
-  fs.writeFileSync(pagePath, page);
+  // Web auth gate: drop the todos import and usage
+  editFile("apps/nextjs/src/app/_components/auth-gate.tsx", [
+    [/\nimport { Todos } from ".\/todos";\n/, "\n"],
+    [/\n\s*<Todos \/>/, ""],
+  ]);
 
   // Expo home screen: drop the todos import and usage
-  const indexPath = path.join(root, "apps/expo/src/app/index.tsx");
-  let index = fs.readFileSync(indexPath, "utf8");
-  index = index
-    .replace(/\nimport { Todos } from "~\/components\/todos";\n/, "\n")
-    .replace(/\n\s*<Todos \/>/, "");
-  fs.writeFileSync(indexPath, index);
+  editFile("apps/expo/src/app/index.tsx", [
+    [/\nimport { Todos } from "~\/components\/todos";\n/, "\n"],
+    [/\n\s*<Todos \/>/, ""],
+  ]);
 }
 
 console.log("Refreshing lockfile…");
@@ -226,21 +264,30 @@ const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 delete pkg.scripts["init:template"];
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 
+// A scope of a different length re-flows import wrapping and markdown table
+// padding, which the format job rejects.
+console.log("Formatting…");
+try {
+  execSync("pnpm format:fix", { cwd: root, stdio: "inherit" });
+} catch {
+  console.warn("pnpm format:fix failed — run it manually.");
+}
+
 // The rewrites above match exact literals, so drift in the template source
 // makes them silently no-op. Catch that here rather than in the new project.
-const leftovers = [];
-for (const file of walk(root)) {
+for (const file of walk(root, (name) => !BINARY.test(name))) {
   const content = fs.readFileSync(file, "utf8");
   for (const [from, to] of replacements) {
     if (from !== to && content.includes(from)) {
-      leftovers.push(`  ${path.relative(root, file)}: ${from}`);
+      warnings.push(`  ${path.relative(root, file)}: leftover ${from}`);
     }
   }
 }
-if (leftovers.length > 0) {
+if (warnings.length > 0) {
   console.warn(
-    "\n⚠ Leftover template placeholders (fix these manually):\n" +
-      leftovers.join("\n"),
+    "\n⚠ The template has drifted from this script. Fix these by hand, then" +
+      " update scripts/init-template.mjs in the template repo:\n" +
+      warnings.join("\n"),
   );
 }
 
