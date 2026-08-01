@@ -5,6 +5,7 @@ import { TextInput } from "react-native";
 
 import { shadowToCss } from "./shadow";
 import { useTokens } from "./theme";
+import { fontSize } from "./typography";
 import { withOpacity } from "./withOpacity";
 
 export type InputProps = TextInputProps;
@@ -21,7 +22,7 @@ export function Input({ style, onFocus, onBlur, ...props }: InputProps) {
       borderWidth: 1,
       borderRadius: tokens.radius.md,
       paddingHorizontal: 12,
-      fontSize: 16,
+      fontSize: fontSize.body,
       color: tokens.colors.foreground,
       // Mirrors web's `bg-transparent dark:bg-input/30`.
       backgroundColor: dark

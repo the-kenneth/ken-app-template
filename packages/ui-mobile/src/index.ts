@@ -42,6 +42,9 @@ export {
   useTokens,
 } from "./theme";
 export type { ThemeModeContextValue } from "./theme";
+// The raw scale, for the rare style that cannot go through Text — a crash
+// screen rendering outside the ThemeProvider, for one.
+export { fontSize, lineHeight } from "./typography";
 export { withOpacity } from "./withOpacity";
 // Re-exported so apps mount the portal host without depending on
 // rn-primitives directly. Required by DropdownMenu.

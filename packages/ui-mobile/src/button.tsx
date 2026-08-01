@@ -18,6 +18,7 @@ import type { Tokens } from "@ken/tokens/native";
 
 import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
+import { fontSize } from "./typography";
 import { withOpacity } from "./withOpacity";
 
 type Fill = HexColor | "transparent";
@@ -109,7 +110,7 @@ export function Button({
       } satisfies ViewStyle,
       label: {
         color: v.foreground,
-        fontSize: 14,
+        fontSize: fontSize.small,
         fontWeight: "500",
         ...(v.underline ? { textDecorationLine: "underline" } : {}),
       } satisfies TextStyle,

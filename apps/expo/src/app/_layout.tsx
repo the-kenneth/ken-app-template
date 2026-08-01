@@ -18,6 +18,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import {
+  fontSize,
   PortalHost,
   resolveStoredTokens,
   ThemeProvider,
@@ -98,11 +99,11 @@ const errorStyles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    fontSize: 24,
+    fontSize: fontSize.h3,
     fontWeight: "700",
   },
   message: {
-    fontSize: 14,
+    fontSize: fontSize.small,
     textAlign: "center",
   },
   button: {
@@ -111,7 +112,7 @@ const errorStyles = StyleSheet.create({
     marginTop: 8,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: fontSize.body,
     fontWeight: "700",
   },
 });

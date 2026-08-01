@@ -43,6 +43,7 @@ import type { Tokens } from "@ken/tokens/native";
 
 import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
+import { fontSize } from "./typography";
 
 /**
  * Mirrors `@ken/ui-web/dropdown-menu`. Behaviour and accessibility come from
@@ -78,7 +79,7 @@ const buildStyles = (t: Tokens) =>
     itemPressed: { backgroundColor: t.colors.accent },
     // Leaves room for the check/dot indicator, matching web's `pl-8`.
     inset: { paddingLeft: 32 },
-    itemText: { fontSize: 14, color: t.colors.popoverForeground },
+    itemText: { fontSize: fontSize.small, color: t.colors.popoverForeground },
     itemTextDestructive: { color: t.colors.destructive },
     disabled: { opacity: 0.5 },
     indicator: {
@@ -87,11 +88,14 @@ const buildStyles = (t: Tokens) =>
       width: 14,
       alignItems: "center",
     },
-    indicatorGlyph: { fontSize: 12, color: t.colors.popoverForeground },
+    indicatorGlyph: {
+      fontSize: fontSize.caption,
+      color: t.colors.popoverForeground,
+    },
     label: {
       paddingHorizontal: 8,
       paddingVertical: 6,
-      fontSize: 14,
+      fontSize: fontSize.small,
       fontWeight: "500",
       color: t.colors.popoverForeground,
     },
@@ -103,7 +107,7 @@ const buildStyles = (t: Tokens) =>
     },
     shortcut: {
       marginLeft: "auto",
-      fontSize: 12,
+      fontSize: fontSize.caption,
       letterSpacing: 1,
       color: t.colors.mutedForeground,
     },
