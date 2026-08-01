@@ -1,9 +1,12 @@
 import { useClerk, useUser } from "@clerk/expo";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
+import { useMemo } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Button, Text } from "@ken/ui-mobile";
+import type { Tokens } from "@ken/tokens/native";
+
+import { Button, Text, useTokens } from "@ken/ui-mobile";
 import { PushTestButton } from "~/components/push-test-button";
 import { SignInScreen } from "~/components/sign-in-screen";
 import { Todos } from "~/components/todos";
@@ -11,6 +14,9 @@ import { Todos } from "~/components/todos";
 export default function Index() {
   const { user } = useUser();
   const { signOut } = useClerk();
+
+  const tokens = useTokens();
+  const styles = useMemo(() => buildStyles(tokens), [tokens]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -42,23 +48,24 @@ export default function Index() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-    gap: 16,
-  },
-  loading: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-});
+const buildStyles = (t: Tokens) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+    },
+    container: {
+      flex: 1,
+      padding: t.spacing * 4,
+      gap: t.spacing * 4,
+    },
+    loading: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+  });

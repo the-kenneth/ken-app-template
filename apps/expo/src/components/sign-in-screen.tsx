@@ -1,10 +1,12 @@
 import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 
-import { Button, Input, Separator, Text } from "@ken/ui-mobile";
+import type { Tokens } from "@ken/tokens/native";
+
+import { Button, Input, Separator, Text, useTokens } from "@ken/ui-mobile";
 
 // Required for the OAuth browser flow to close correctly.
 WebBrowser.maybeCompleteAuthSession();
@@ -30,6 +32,9 @@ export function SignInScreen() {
   const { signIn } = useSignIn();
   const { signUp } = useSignUp();
   const { startSSOFlow } = useSSO();
+
+  const tokens = useTokens();
+  const styles = useMemo(() => buildStyles(tokens), [tokens]);
 
   // Warm up the browser on Android for a faster OAuth flow.
   useEffect(() => {
@@ -210,28 +215,29 @@ export function SignInScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-    gap: 12,
-  },
-  subtitle: {
-    marginBottom: 8,
-  },
-  divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginVertical: 4,
-  },
-  // flexBasis from `flex` wins over the Separator's own `width: "100%"`, so the
-  // two rules share the row either side of the label.
-  dividerLine: {
-    flex: 1,
-  },
-  switchMode: {
-    marginTop: 8,
-  },
-});
+const buildStyles = (t: Tokens) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      padding: t.spacing * 6,
+      gap: t.spacing * 3,
+    },
+    subtitle: {
+      marginBottom: t.spacing * 2,
+    },
+    divider: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing * 2,
+      marginVertical: t.spacing,
+    },
+    // flexBasis from `flex` wins over the Separator's own `width: "100%"`, so the
+    // two rules share the row either side of the label.
+    dividerLine: {
+      flex: 1,
+    },
+    switchMode: {
+      marginTop: t.spacing * 2,
+    },
+  });
