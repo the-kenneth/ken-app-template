@@ -10,7 +10,7 @@ catalog:
   "@types/node": ^22.18.12
   convex: ^1.42.1
   tailwindcss: ^4.1.16
-  typescript: 7.0.2
+  typescript: ~6.0.3
   zod: ^4.1.12
 
 catalogs:
@@ -26,8 +26,6 @@ catalogs:
     "@types/react-dom": ~19.2.3
     react: 19.2.3
     react-dom: 19.2.3
-  typescript5:
-    typescript: ^5.9.3
 
 linkWorkspacePackages: true
 

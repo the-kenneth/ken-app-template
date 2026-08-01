@@ -30,7 +30,7 @@
     "react-native": "catalog:native",
     "react-native-mmkv": "catalog:native",
     "react-native-reanimated": "catalog:native",
-    "typescript": "catalog:typescript5"
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:react19",
