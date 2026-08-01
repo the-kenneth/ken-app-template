@@ -2,15 +2,9 @@ import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+
+import { Button, Input, Separator, Text } from "@ken/ui-mobile";
 
 // Required for the OAuth browser flow to close correctly.
 WebBrowser.maybeCompleteAuthSession();
@@ -122,23 +116,25 @@ export function SignInScreen() {
   if (mode === "verifyEmail") {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Check your email</Text>
-        <Text style={styles.subtitle}>We sent a code to {email}</Text>
-        <TextInput
-          style={styles.input}
+        <Text variant="h2">Check your email</Text>
+        <Text tone="muted" style={styles.subtitle}>
+          We sent a code to {email}
+        </Text>
+        <Input
           value={code}
           onChangeText={setCode}
           placeholder="Verification code"
           keyboardType="number-pad"
           autoFocus
         />
-        {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={() => void onVerifyPress()}
-        >
-          <Text style={styles.primaryButtonText}>Verify</Text>
-        </TouchableOpacity>
+        {error && (
+          <Text variant="small" tone="destructive">
+            {error}
+          </Text>
+        )}
+        <Button size="lg" onPress={() => void onVerifyPress()}>
+          Verify
+        </Button>
       </View>
     );
   }
@@ -150,12 +146,9 @@ export function SignInScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text style={styles.title}>
-        {isSignIn ? "Sign in" : "Create account"}
-      </Text>
+      <Text variant="h2">{isSignIn ? "Sign in" : "Create account"}</Text>
 
-      <TextInput
-        style={styles.input}
+      <Input
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
@@ -163,51 +156,56 @@ export function SignInScreen() {
         keyboardType="email-address"
         autoComplete="email"
       />
-      <TextInput
-        style={styles.input}
+      <Input
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
         secureTextEntry
         autoComplete={isSignIn ? "current-password" : "new-password"}
       />
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && (
+        <Text variant="small" tone="destructive">
+          {error}
+        </Text>
+      )}
 
-      <TouchableOpacity
-        style={styles.primaryButton}
+      <Button
+        size="lg"
         onPress={() => void (isSignIn ? onSignInPress() : onSignUpPress())}
       >
-        <Text style={styles.primaryButtonText}>
-          {isSignIn ? "Sign in" : "Sign up"}
-        </Text>
-      </TouchableOpacity>
+        {isSignIn ? "Sign in" : "Sign up"}
+      </Button>
 
       <View style={styles.divider}>
-        <View style={styles.dividerLine} />
-        <Text style={styles.dividerText}>or</Text>
-        <View style={styles.dividerLine} />
+        <Separator style={styles.dividerLine} />
+        <Text variant="small" tone="muted">
+          or
+        </Text>
+        <Separator style={styles.dividerLine} />
       </View>
 
-      <TouchableOpacity
-        style={styles.oauthButton}
+      <Button
+        variant="outline"
+        size="lg"
         onPress={() => void onSSOPress("oauth_google")}
       >
-        <Text style={styles.oauthButtonText}>Continue with Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.oauthButton}
+        Continue with Google
+      </Button>
+      <Button
+        variant="outline"
+        size="lg"
         onPress={() => void onSSOPress("oauth_apple")}
       >
-        <Text style={styles.oauthButtonText}>Continue with Apple</Text>
-      </TouchableOpacity>
+        Continue with Apple
+      </Button>
 
-      <TouchableOpacity onPress={() => setMode(isSignIn ? "signUp" : "signIn")}>
-        <Text style={styles.switchMode}>
-          {isSignIn
-            ? "No account? Sign up"
-            : "Already have an account? Sign in"}
-        </Text>
-      </TouchableOpacity>
+      <Button
+        variant="link"
+        style={styles.switchMode}
+        onPress={() => setMode(isSignIn ? "signUp" : "signIn")}
+      >
+        {isSignIn ? "No account? Sign up" : "Already have an account? Sign in"}
+      </Button>
     </KeyboardAvoidingView>
   );
 }
@@ -219,36 +217,8 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 12,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    marginBottom: 4,
-  },
   subtitle: {
-    fontSize: 16,
-    color: "#71717A",
     marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#D4D4D8",
-    borderRadius: 10,
-    padding: 14,
-    fontSize: 16,
-  },
-  error: {
-    color: "#DC2626",
-  },
-  primaryButton: {
-    backgroundColor: "#6366F1",
-    borderRadius: 10,
-    padding: 14,
-    alignItems: "center",
-  },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
   },
   divider: {
     flexDirection: "row",
@@ -256,29 +226,12 @@ const styles = StyleSheet.create({
     gap: 8,
     marginVertical: 4,
   },
+  // flexBasis from `flex` wins over the Separator's own `width: "100%"`, so the
+  // two rules share the row either side of the label.
   dividerLine: {
     flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "#D4D4D8",
-  },
-  dividerText: {
-    color: "#71717A",
-  },
-  oauthButton: {
-    borderWidth: 1,
-    borderColor: "#D4D4D8",
-    borderRadius: 10,
-    padding: 14,
-    alignItems: "center",
-  },
-  oauthButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
   },
   switchMode: {
-    textAlign: "center",
-    color: "#6366F1",
-    fontWeight: "600",
     marginTop: 8,
   },
 });

@@ -1,14 +1,9 @@
 import { useClerk, useUser } from "@clerk/expo";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Button, Text } from "@ken/ui-mobile";
 import { PushTestButton } from "~/components/push-test-button";
 import { SignInScreen } from "~/components/sign-in-screen";
 import { Todos } from "~/components/todos";
@@ -32,12 +27,12 @@ export default function Index() {
       <Authenticated>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>
+            <Text variant="h3">
               Hi, {user?.firstName ?? user?.emailAddresses[0]?.emailAddress}
             </Text>
-            <TouchableOpacity onPress={() => void signOut()}>
-              <Text style={styles.signOut}>Sign out</Text>
-            </TouchableOpacity>
+            <Button variant="link" size="sm" onPress={() => void signOut()}>
+              Sign out
+            </Button>
           </View>
           <PushTestButton />
           <Todos />
@@ -65,13 +60,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-  },
-  signOut: {
-    color: "#6366F1",
-    fontWeight: "600",
   },
 });

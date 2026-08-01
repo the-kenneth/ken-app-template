@@ -1,9 +1,18 @@
 import { useAction } from "convex/react";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
+import { Button } from "@ken/ui-mobile";
+
+type Status = "idle" | "sending" | "sent" | "error";
+
+const LABELS: Record<Status, string> = {
+  idle: "Send me a test notification",
+  sending: "Sending…",
+  sent: "Sent! Check your notifications",
+  error: "Failed — see Convex logs",
+};
 
 /**
  * Demo: asks Convex to push a notification to all of this user's devices.
@@ -11,9 +20,7 @@ import { api } from "@ken/backend/convex/_generated/api";
  */
 export function PushTestButton() {
   const sendTest = useAction(api.push.sendTestToMe);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
+  const [status, setStatus] = useState<Status>("idle");
 
   const onPress = async () => {
     setStatus("sending");
@@ -27,30 +34,13 @@ export function PushTestButton() {
   };
 
   return (
-    <TouchableOpacity style={styles.button} onPress={() => void onPress()}>
-      <Text style={styles.text}>
-        {status === "sending"
-          ? "Sending…"
-          : status === "sent"
-            ? "Sent! Check your notifications"
-            : status === "error"
-              ? "Failed — see Convex logs"
-              : "Send me a test notification"}
-      </Text>
-    </TouchableOpacity>
+    <Button
+      variant="outline"
+      size="lg"
+      disabled={status === "sending"}
+      onPress={() => void onPress()}
+    >
+      {LABELS[status]}
+    </Button>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderWidth: 1,
-    borderColor: "#6366F1",
-    borderRadius: 10,
-    padding: 12,
-    alignItems: "center",
-  },
-  text: {
-    color: "#6366F1",
-    fontWeight: "600",
-  },
-});
