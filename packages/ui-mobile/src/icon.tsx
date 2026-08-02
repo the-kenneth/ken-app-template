@@ -1,4 +1,7 @@
-import type { Icon as PhosphorIcon } from "phosphor-react-native";
+import type {
+  IconProps as PhosphorIconProps,
+  Icon as PhosphorIcon,
+} from "phosphor-react-native";
 
 import type { HexColor, IconSize, IconWeight } from "@ken/tokens/contracts";
 
@@ -10,7 +13,14 @@ const SIZES: Record<IconSize, number> = {
   lg: 24,
 };
 
-export interface IconProps {
+/**
+ * The glyph's remaining props (`style`, `testID`, `title`, `mirrored`, …) pass
+ * through, mirroring how web spreads the rest of `ComponentProps<"svg">`.
+ */
+export interface IconProps extends Omit<
+  PhosphorIconProps,
+  "size" | "weight" | "color"
+> {
   /** Any icon from `phosphor-react-native`, e.g. `HouseIcon`. */
   as: PhosphorIcon;
   size?: IconSize;
@@ -27,6 +37,7 @@ export function Icon({
   size = "default",
   weight = "regular",
   color,
+  ...props
 }: IconProps) {
   const tokens = useTokens();
 
@@ -35,6 +46,7 @@ export function Icon({
       size={SIZES[size]}
       weight={weight}
       color={color ?? tokens.colors.foreground}
+      {...props}
     />
   );
 }

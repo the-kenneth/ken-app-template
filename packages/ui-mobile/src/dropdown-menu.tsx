@@ -35,12 +35,14 @@ import {
   SubTrigger,
   Trigger,
 } from "@rn-primitives/dropdown-menu";
+import { CheckIcon } from "phosphor-react-native";
 import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import type { MenuItemVariant } from "@ken/tokens/contracts";
 import type { Tokens } from "@ken/tokens/native";
 
+import { Icon } from "./icon";
 import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
 import { fontSize } from "./typography";
@@ -88,9 +90,11 @@ const buildStyles = (t: Tokens) =>
       width: 14,
       alignItems: "center",
     },
-    indicatorGlyph: {
-      fontSize: fontSize.caption,
-      color: t.colors.popoverForeground,
+    indicatorDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: t.colors.popoverForeground,
     },
     label: {
       paddingHorizontal: 8,
@@ -202,13 +206,30 @@ export function DropdownMenuItem({
   );
 }
 
-/** Glyphs rather than icons, so ui-mobile stays free of an icon dependency. */
-function Indicator({ glyph }: { glyph: string }) {
+function CheckIndicator() {
+  const styles = useStyles();
+  const tokens = useTokens();
+  return (
+    <View style={styles.indicator} pointerEvents="none">
+      <ItemIndicator>
+        <Icon
+          as={CheckIcon}
+          size="sm"
+          color={tokens.colors.popoverForeground}
+        />
+      </ItemIndicator>
+    </View>
+  );
+}
+
+// A plain view, not `Icon`: web draws this dot at 8px, which is below the
+// shared size scale's smallest step.
+function DotIndicator() {
   const styles = useStyles();
   return (
     <View style={styles.indicator} pointerEvents="none">
       <ItemIndicator>
-        <Text style={styles.indicatorGlyph}>{glyph}</Text>
+        <View style={styles.indicatorDot} />
       </ItemIndicator>
     </View>
   );
@@ -233,7 +254,7 @@ export function DropdownMenuCheckboxItem({
       ]}
       {...props}
     >
-      <Indicator glyph="✓" />
+      <CheckIndicator />
       {renderChildren(children, styles.itemText)}
     </CheckboxItem>
   );
@@ -262,7 +283,7 @@ export function DropdownMenuRadioItem({
       ]}
       {...props}
     >
-      <Indicator glyph="●" />
+      <DotIndicator />
       {renderChildren(children, styles.itemText)}
     </RadioItem>
   );

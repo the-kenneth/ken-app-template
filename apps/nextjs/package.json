@@ -17,6 +17,7 @@
     "@ken/analytics": "workspace:*",
     "@ken/backend": "workspace:*",
     "@ken/ui-web": "workspace:*",
+    "@phosphor-icons/react": "^2.1.10",
     "@sentry/nextjs": "^10.63.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "convex": "catalog:",

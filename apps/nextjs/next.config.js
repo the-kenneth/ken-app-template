@@ -10,7 +10,7 @@ await jiti.import("./src/env");
 /** @type {import("next").NextConfig} */
 const config = {
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@ken/analytics", "@ken/backend", "@ken/ui"],
+  transpilePackages: ["@ken/analytics", "@ken/backend", "@ken/ui-web"],
 
   /**
    * Pin the workspace root to the monorepo root. Without this, Next.js infers
@@ -19,6 +19,12 @@ const config = {
   turbopack: {
     root: join(dirname(fileURLToPath(import.meta.url)), "..", ".."),
   },
+
+  /**
+   * Phosphor ships ~1500 icons from one barrel and isn't in Next's default
+   * list, so without this a dev compile pulls all of them.
+   */
+  experimental: { optimizePackageImports: ["@phosphor-icons/react"] },
 
   /** We already do linting and typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
