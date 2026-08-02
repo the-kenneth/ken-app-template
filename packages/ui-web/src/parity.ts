@@ -3,11 +3,14 @@ import type { VariantProps } from "class-variance-authority";
 import type {
   ButtonSize,
   ButtonVariant,
+  IconSize,
+  IconWeight,
   MenuItemVariant,
 } from "@ken/tokens/contracts";
 
 import type { buttonVariants } from "./button";
 import type { DropdownMenuItem } from "./dropdown-menu";
+import type { Icon } from "./icon";
 
 /**
  * Compile-time proof that this platform's components accept exactly the
@@ -41,3 +44,9 @@ type WebMenuItemVariant = NonNullable<
 export type MenuItemVariantParity = Assert<
   Exact<WebMenuItemVariant, MenuItemVariant>
 >;
+
+type WebIconSize = NonNullable<Parameters<typeof Icon>[0]["size"]>;
+type WebIconWeight = NonNullable<Parameters<typeof Icon>[0]["weight"]>;
+
+export type IconSizeParity = Assert<Exact<WebIconSize, IconSize>>;
+export type IconWeightParity = Assert<Exact<WebIconWeight, IconWeight>>;

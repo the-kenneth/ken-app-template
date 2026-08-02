@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CheckIcon,
-  ChevronRightIcon,
-  DotFilledIcon,
-} from "@radix-ui/react-icons";
+import { CaretRightIcon, CheckIcon, CircleIcon } from "@phosphor-icons/react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 import { cn } from "@ken/ui-web";
@@ -138,7 +134,7 @@ export function DropdownMenuRadioItem({
     >
       <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
-          <DotFilledIcon className="size-2 fill-current" />
+          <CircleIcon weight="fill" className="size-2" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -220,7 +216,7 @@ export function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ml-auto size-4" />
+      <CaretRightIcon className="ml-auto size-4" />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

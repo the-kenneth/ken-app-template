@@ -25,6 +25,8 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+export { Icon } from "./icon";
+export type { IconProps } from "./icon";
 export { Input } from "./input";
 export type { InputProps } from "./input";
 export { Label } from "./label";

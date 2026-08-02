@@ -43,6 +43,7 @@
     "expo-system-ui": "~57.0.2",
     "expo-updates": "~57.0.11",
     "expo-web-browser": "~57.0.2",
+    "phosphor-react-native": "catalog:native",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "react-native": "catalog:native",
@@ -51,6 +52,7 @@
     "react-native-reanimated": "catalog:native",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.26.2",
+    "react-native-svg": "catalog:native",
     "react-native-worklets": "0.10.1",
     "zustand": "^5.0.14"
   },

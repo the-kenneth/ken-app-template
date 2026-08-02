@@ -62,6 +62,20 @@ export type ButtonVariant =
 
 export type ButtonSize = "default" | "sm" | "lg" | "icon";
 
+export type IconSize = "sm" | "default" | "lg";
+
+/**
+ * Phosphor's own weight axis, named identically in `@phosphor-icons/react` and
+ * `phosphor-react-native` — so an icon means the same thing on both platforms.
+ */
+export type IconWeight =
+  | "thin"
+  | "light"
+  | "regular"
+  | "bold"
+  | "fill"
+  | "duotone";
+
 export type SeparatorOrientation = "horizontal" | "vertical";
 
 /** Shared by DropdownMenu items on both platforms. */
