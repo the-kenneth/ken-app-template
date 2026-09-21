@@ -1,9 +1,9 @@
 const preset = require("jest-expo/ios/jest-preset");
 
-// @rn-primitives and Phosphor's per-glyph entry points publish source JSX.
+// TrueSheet, rn-primitives, and Phosphor publish code Jest must transform.
 // Widen the preset's patterns so upstream additions carry through.
 const transformIgnorePatterns = preset.transformIgnorePatterns.map((pattern) =>
-  pattern.replace("(?!(", "(?!(@rn-primitives|phosphor-react-native|"),
+  pattern.replace("(?!(", "(?!(@lodev09|@rn-primitives|phosphor-react-native|"),
 );
 
 // expo-router's route renderer and Expo's native mocks are Jest-shaped.
@@ -13,6 +13,7 @@ module.exports = {
   transformIgnorePatterns,
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   moduleNameMapper: {
+    "^@lodev09/react-native-true-sheet$": "<rootDir>/test/mocks/true-sheet.cjs",
     "^phosphor-react-native/src/icons/(.*)$":
       "<rootDir>/node_modules/phosphor-react-native/src/icons/$1",
     "^convex/react$": "<rootDir>/test/mocks/convex.tsx",

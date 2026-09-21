@@ -19,6 +19,7 @@ catalogs:
   # `expo install --fix` can't read catalog: specs; when it flags one of these,
   # bump the version here instead of letting it rewrite the spec in place.
   native:
+    "@lodev09/react-native-true-sheet": ^3.11.11
     phosphor-react-native: ^3.0.6
     react-native: 0.86.3
     react-native-mmkv: ^4.3.2

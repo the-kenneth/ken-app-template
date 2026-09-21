@@ -29,6 +29,7 @@
     "@ken/backend": "workspace:*",
     "@ken/tokens": "workspace:*",
     "@ken/ui-mobile": "workspace:*",
+    "@lodev09/react-native-true-sheet": "catalog:native",
     "@sentry/react-native": "^7.11.0",
     "convex": "catalog:",
     "expo": "~57.0.16",

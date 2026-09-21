@@ -94,7 +94,7 @@ Only the import path differs for mirrored interfaces:
 | Interface | Web | Mobile |
 | --- | --- | --- |
 | button, card, dropdown-menu, icon, input, label, separator, skeleton, theme, toast | yes | yes |
-| text, touchable | no | yes |
+| sheet, text, touchable | no | yes |
 | field | yes | no |
 
 Import from package subpaths. `pnpm ui-add <name>` adds a web component; mirror

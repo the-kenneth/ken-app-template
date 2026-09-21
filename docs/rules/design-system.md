@@ -22,7 +22,7 @@ There is no react-native-web runtime.
   Web resolves the same values through generated CSS variables.
 - Theme choice is synchronous on both platforms: localStorage on web and MMKV
   on mobile, so the saved appearance is known before first paint.
-- `Touchable` is mobile-only because CSS supplies web press feedback. Field is
-  web-only. Typography is also platform-specific.
+- `Sheet` and `Touchable` are mobile-only because their interaction belongs to
+  the device. Field is web-only. Typography is also platform-specific.
 
 Icons have their own rule in `docs/rules/icons.md`.
