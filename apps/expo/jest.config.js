@@ -1,9 +1,9 @@
 const preset = require("jest-expo/ios/jest-preset");
 
-// @rn-primitives publishes untranspiled JSX, and jest-expo's allowlist does
-// not name it. Widen the preset's patterns so upstream additions carry through.
+// @rn-primitives and Phosphor's per-glyph entry points publish source JSX.
+// Widen the preset's patterns so upstream additions carry through.
 const transformIgnorePatterns = preset.transformIgnorePatterns.map((pattern) =>
-  pattern.replace("(?!(", "(?!(@rn-primitives|"),
+  pattern.replace("(?!(", "(?!(@rn-primitives|phosphor-react-native|"),
 );
 
 // expo-router's route renderer and Expo's native mocks are Jest-shaped.
@@ -13,6 +13,8 @@ module.exports = {
   transformIgnorePatterns,
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   moduleNameMapper: {
+    "^phosphor-react-native/src/icons/(.*)$":
+      "<rootDir>/node_modules/phosphor-react-native/src/icons/$1",
     "^convex/react$": "<rootDir>/test/mocks/convex.tsx",
     "^convex/react-clerk$": "<rootDir>/test/mocks/convex.tsx",
     "^@clerk/expo$": "<rootDir>/test/mocks/clerk.tsx",

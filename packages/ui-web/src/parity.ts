@@ -3,11 +3,14 @@ import type { VariantProps } from "class-variance-authority";
 import type {
   ButtonSize,
   ButtonVariant,
+  IconSize,
+  IconWeight,
   MenuItemVariant,
 } from "@ken/tokens/contracts";
 
 import type { buttonVariants } from "./button";
 import type { DropdownMenuItem } from "./dropdown-menu";
+import type { Icon } from "./icon";
 
 /**
  * Compile-time proof that this platform's components accept exactly the
@@ -16,10 +19,9 @@ import type { DropdownMenuItem } from "./dropdown-menu";
  *
  * Asserted from outside the components so `pnpm ui-add` output stays pristine.
  *
- * Only web needs these, and only where it restates a union rather than reusing
- * it: `Button` infers from cva and `DropdownMenuItem` declares inline, so both
- * can drift silently. A component that types its props from the contract
- * directly is already pinned and needs nothing here.
+ * Only web needs these: mobile types its props from the contract and cannot
+ * drift. Assert from the public prop type so later implementation changes do
+ * not silently weaken the cross-platform interface.
  */
 
 type Exact<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
@@ -43,6 +45,8 @@ export type MenuItemVariantParity = Assert<
   Exact<WebMenuItemVariant, MenuItemVariant>
 >;
 
-// Icon needs no assertion: it types both props straight from the contract, and
-// each is already pinned structurally — `size` by an exhaustive Record in
-// icon.tsx, `weight` by passing through to the Phosphor glyph's own union.
+type WebIconSize = NonNullable<Parameters<typeof Icon>[0]["size"]>;
+type WebIconWeight = NonNullable<Parameters<typeof Icon>[0]["weight"]>;
+
+export type IconSizeParity = Assert<Exact<WebIconSize, IconSize>>;
+export type IconWeightParity = Assert<Exact<WebIconWeight, IconWeight>>;

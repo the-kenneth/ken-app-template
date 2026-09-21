@@ -5,7 +5,11 @@
     "checkJs": false,
     "moduleSuffixes": [".ios", ".android", ".native", ""],
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      // The per-glyph runtime entry is TSX source; typecheck against its declarations.
+      "phosphor-react-native/src/icons/*": [
+        "./node_modules/phosphor-react-native/lib/typescript/icons/*"
+      ]
     }
   },
   "include": [
