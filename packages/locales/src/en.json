@@ -1,5 +1,8 @@
 {
   "shared": {
+    "product": {
+      "name": "Ken"
+    },
     "todos": {
       "title": "Todos",
       "input-placeholder": "What needs doing?",
@@ -18,11 +21,9 @@
   },
   "web": {
     "metadata": {
-      "title": "Ken",
       "description": "Web + mobile monorepo template (Next.js, Expo, Convex, Clerk)"
     },
     "home": {
-      "brand-name": "Ken",
       "template-label": "Template",
       "stack-description": "Next.js + Expo + Convex + Clerk"
     },

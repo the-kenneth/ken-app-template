@@ -19,13 +19,14 @@ import "~/app/styles.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("web.metadata");
+  const product = await getTranslations("shared.product");
   return {
     metadataBase: new URL(
       env.VERCEL_ENV === "production"
         ? "https://example.com" // TODO: your production URL
         : "http://localhost:3000",
     ),
-    title: t("title"),
+    title: product("name"),
     description: t("description"),
   };
 }

@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./en.json": "./src/en.json",
     "./messages": "./src/messages.ts"
   },
   "license": "MIT",
