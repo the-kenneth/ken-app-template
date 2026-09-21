@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 import { api } from "@ken/backend/convex/_generated/api";
-import { getUserLanguageTag } from "~/locale/utils";
+import { APP_LANGUAGE_TAG } from "~/locale/i18n";
 
 // How incoming notifications behave while the app is foregrounded.
 Notifications.setNotificationHandler({
@@ -63,7 +63,7 @@ export function PushRegistrar() {
       const { data: token } = await Notifications.getExpoPushTokenAsync({
         projectId,
       });
-      await registerToken({ languageTag: getUserLanguageTag(), token });
+      await registerToken({ languageTag: APP_LANGUAGE_TAG, token });
     };
 
     register().catch((error: unknown) => {

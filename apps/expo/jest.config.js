@@ -21,6 +21,7 @@ module.exports = {
     "^@clerk/expo$": "<rootDir>/test/mocks/clerk.tsx",
     "^@clerk/expo/token-cache$": "<rootDir>/test/mocks/token-cache.ts",
     "^expo-notifications$": "<rootDir>/test/mocks/notifications.ts",
+    "^expo-localization$": "<rootDir>/test/mocks/localization.ts",
     "^react-native-mmkv$": "<rootDir>/test/mocks/mmkv.ts",
     "^react-native-nitro-modules$": "<rootDir>/test/mocks/nitro-modules.ts",
     "^react-native-reanimated$": "<rootDir>/test/mocks/reanimated.tsx",

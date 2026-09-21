@@ -12,9 +12,11 @@ import {
 
 import { getUserLanguageTag } from "./utils";
 
+export const APP_LANGUAGE_TAG = getUserLanguageTag();
+
 const languageDetector: LanguageDetectorModule = {
   type: "languageDetector",
-  detect: getUserLanguageTag,
+  detect: () => APP_LANGUAGE_TAG,
   init: () => undefined,
   cacheUserLanguage: () => undefined,
 };

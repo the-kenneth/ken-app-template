@@ -1,5 +1,4 @@
-// Add a region: create its partial override and register its tag/fallback in @ken/locales.
-// Add a language: create its complete base catalogue, then register its region tags there.
+// Locale support and extension steps are centralized in @ken/locales and docs/rules/i18n.md.
 import { getLocales } from "expo-localization";
 
 import {

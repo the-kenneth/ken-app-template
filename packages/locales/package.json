@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "@ken/tsconfig": "workspace:*",
-    "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

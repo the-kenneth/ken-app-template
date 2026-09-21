@@ -1,5 +1,6 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
+import { defaultMessages } from "@ken/locales";
 // `@ken/tokens/colors` rather than `/native`: Expo loads this file with plain
 // Node ESM, which cannot resolve the extensionless relative imports the latter
 // pulls in. The generated colour map has no runtime imports at all.
@@ -9,7 +10,7 @@ import { nativeColors } from "@ken/tokens/colors";
 // rewritten by `pnpm init:template` when you start a new project.
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Ken",
+  name: defaultMessages.web.metadata.title,
   slug: "ken-app",
   scheme: "ken-app",
   version: "0.1.0",

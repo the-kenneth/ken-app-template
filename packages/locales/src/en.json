@@ -13,7 +13,6 @@
     },
     "errors": {
       "title": "Something went wrong",
-      "description": "An unexpected error occurred. Try again, or reload the app.",
       "retry": "Try again"
     }
   },
@@ -46,6 +45,9 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System"
+    },
+    "errors": {
+      "description": "An unexpected error occurred. Try again, or reload the page."
     }
   },
   "mobile": {
@@ -90,6 +92,9 @@
       "sent": "Sent! Check your notifications",
       "error": "Failed — see Convex logs",
       "default-channel": "Default"
+    },
+    "errors": {
+      "description": "An unexpected error occurred. Try again, or restart the app."
     }
   },
   "backend": {

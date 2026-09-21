@@ -17,6 +17,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   const t = useTranslations("shared.errors");
+  const webErrors = useTranslations("web.errors");
   useEffect(() => {
     Sentry.captureException(error);
   }, [error]);
@@ -24,7 +25,9 @@ export default function ErrorPage({
   return (
     <main className="container mx-auto flex max-w-2xl flex-col items-center gap-4 py-16">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <p className="text-center text-muted-foreground">{t("description")}</p>
+      <p className="text-center text-muted-foreground">
+        {webErrors("description")}
+      </p>
       <Button onClick={reset}>{t("retry")}</Button>
     </main>
   );

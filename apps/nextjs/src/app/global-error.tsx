@@ -30,7 +30,7 @@ export default function GlobalError({
             {defaultMessages.shared.errors.title}
           </h1>
           <p className="text-center text-muted-foreground">
-            {defaultMessages.shared.errors.description}
+            {defaultMessages.web.errors.description}
           </p>
           <Button onClick={reset}>{defaultMessages.shared.errors.retry}</Button>
         </main>

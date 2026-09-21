@@ -70,7 +70,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
       <RNText
         style={[errorStyles.message, { color: t.colors.mutedForeground }]}
       >
-        {defaultMessages.shared.errors.description}
+        {defaultMessages.mobile.errors.description}
       </RNText>
       <Pressable
         onPress={() => void retry()}
