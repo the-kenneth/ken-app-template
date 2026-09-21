@@ -7,9 +7,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import type { Tokens } from "@ken/tokens/native";
 
 import { Button, Text, useTokens } from "@ken/ui-mobile";
-import { PushTestButton } from "~/components/push-test-button";
-import { SignInScreen } from "~/components/sign-in-screen";
-import { Todos } from "~/components/todos";
+import { SignInScreen } from "~/features/auth/components/sign-in-screen";
+import { PushTestButton } from "~/features/notifications/components/push-test-button";
+import { Todos } from "~/features/todos/components/todos";
 
 export default function Index() {
   const { user } = useUser();

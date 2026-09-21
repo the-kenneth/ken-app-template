@@ -17,6 +17,11 @@ packages/analytics/ Typed track() facade (console in dev, no-op until a provider
 tooling/            Shared tsconfig / tailwind presets
 ```
 
+Inside `apps/expo/src`, `app/` contains routes only. Each feature owns one
+folder under `features/`; its logic sits at that feature root and its views sit
+under `components/`. Do not create root-level `components/`, `hooks/`,
+`services/`, or `stores/` buckets.
+
 Workspace packages are referenced as `@ken/*` (e.g. `@ken/backend`, `@ken/ui-web`). Shared dependency versions live in `pnpm-workspace.yaml` under `catalog:` / `catalogs:` — reference them as `"convex": "catalog:"` in package.json rather than pinning versions per package.
 
 ## Commands

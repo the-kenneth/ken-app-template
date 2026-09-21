@@ -26,9 +26,9 @@ import {
   useTokens,
 } from "@ken/ui-mobile";
 import { Toaster } from "@ken/ui-mobile/toast";
-import { PushRegistrar } from "~/components/push-registrar";
-import { StoreUser } from "~/components/store-user";
 import { loadEnv, SENTRY_DSN } from "~/env";
+import { StoreUser } from "~/features/auth/store-user";
+import { PushRegistrar } from "~/features/notifications/push-registrar";
 
 // Crash reporting. No-op unless EXPO_PUBLIC_SENTRY_DSN is set — enable per
 // project by adding the DSN to .env (see README).

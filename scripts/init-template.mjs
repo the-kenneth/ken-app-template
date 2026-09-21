@@ -202,8 +202,8 @@ if (removeDemo) {
     "packages/backend/convex/todos.test.ts",
     "packages/backend/convex/tables/todos.ts",
     "apps/nextjs/src/app/_components/todos.tsx",
-    "apps/expo/src/components/todos.tsx",
-    "apps/expo/src/stores/todo-filter.ts",
+    "apps/expo/src/features/todos/components/todos.tsx",
+    "apps/expo/src/features/todos/todo-filter.ts",
   ];
   for (const file of demoFiles) {
     fs.rmSync(path.join(root, file), { force: true });
@@ -245,7 +245,10 @@ if (removeDemo) {
 
   // Expo home screen: drop the todos import and usage
   editFile("apps/expo/src/app/index.tsx", [
-    [/\nimport { Todos } from "~\/components\/todos";\n/, "\n"],
+    [
+      /\nimport { Todos } from "~\/features\/todos\/components\/todos";\n/,
+      "\n",
+    ],
     [/\n\s*<Todos \/>/, ""],
   ]);
 }

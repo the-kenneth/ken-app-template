@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 import type { Tokens } from "@ken/tokens/native";
-import type { TodoFilter } from "~/stores/todo-filter";
+import type { TodoFilter } from "~/features/todos/todo-filter";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
@@ -23,7 +23,7 @@ import {
   Text,
   useTokens,
 } from "@ken/ui-mobile";
-import { useTodoFilter } from "~/stores/todo-filter";
+import { useTodoFilter } from "~/features/todos/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];
 

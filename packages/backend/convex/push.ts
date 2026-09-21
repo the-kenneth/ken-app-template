@@ -1,7 +1,5 @@
-// Push notifications via Expo's push service.
-// Flow: the mobile app registers its Expo push token after sign-in
-// (see apps/expo/src/components/push-registrar.tsx); `sendToUser` fans a
-// message out to all of a user's devices through https://exp.host.
+// The app registers tokens after sign-in; sendToUser fans messages across devices.
+// See apps/expo/src/features/notifications/push-registrar.tsx.
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
