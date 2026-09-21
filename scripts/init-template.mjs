@@ -42,7 +42,7 @@ const IGNORED_DIRS = new Set([
   "_generated",
 ]);
 
-const REWRITABLE = /\.(ts|tsx|mts|js|jsx|mjs|json|yaml|yml|md|css|hbs)$/;
+const REWRITABLE = /\.(ts|tsx|mts|js|jsx|mjs|json|yaml|yml|toml|md|css|hbs)$/;
 
 // The leftover audit reads everything that isn't one of these, so a file type
 // missing from REWRITABLE gets reported rather than shipping a stale placeholder.

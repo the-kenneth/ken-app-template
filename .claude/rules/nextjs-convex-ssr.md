@@ -1,0 +1,1 @@
+../../docs/rules/nextjs-convex-ssr.md

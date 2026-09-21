@@ -23,6 +23,7 @@
     "turbo/generators/templates/**",
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
+    "**/AGENTS.md",
     "**/CLAUDE.md"
   ]
 }
