@@ -62,6 +62,10 @@
             "group": ["**/device-storage"],
             "importNames": ["deviceStorage"],
             "message": "The raw instance is the device test seam. Build a store with createStore instead."
+          },
+          {
+            "group": ["expo-localization"],
+            "message": "Device locale access is centralized in apps/expo/src/locale/utils.ts."
           }
         ]
       }
@@ -71,6 +75,7 @@
     {
       "files": [
         "apps/expo/src/device-storage.ts",
+        "apps/expo/src/locale/utils.ts",
         "packages/ui-mobile/src/theme.tsx"
       ],
       "rules": { "no-restricted-imports": "off" }

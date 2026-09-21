@@ -1,6 +1,8 @@
-// The app registers tokens after sign-in; sendToUser fans messages across devices.
+// The app registers tokens after sign-in; sendTestToUser fans messages across devices.
 // See apps/expo/src/features/notifications/push-registrar.tsx.
 import { v } from "convex/values";
+
+import { DEFAULT_LANGUAGE_TAG, getMessages } from "@ken/locales";
 
 import { internal } from "./_generated/api";
 import {
@@ -14,18 +16,28 @@ import { getCurrentUserOrThrow } from "./users";
 
 /** Called by the mobile app whenever it has a fresh Expo push token. */
 export const registerToken = mutation({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
+  args: {
+    token: v.string(),
+    languageTag: v.union(v.literal("en-US"), v.literal("en-GB")),
+  },
+  handler: async (ctx, { token, languageTag }) => {
     const user = await getCurrentUserOrThrow(ctx);
     const existing = await ctx.db
       .query("pushTokens")
       .withIndex("by_token", (q) => q.eq("token", token))
       .unique();
     if (existing === null) {
-      await ctx.db.insert("pushTokens", { userId: user._id, token });
-    } else if (existing.userId !== user._id) {
-      // Device changed hands (sign-out → different account signs in).
-      await ctx.db.patch(existing._id, { userId: user._id });
+      await ctx.db.insert("pushTokens", {
+        userId: user._id,
+        token,
+        languageTag,
+      });
+    } else if (
+      existing.userId !== user._id ||
+      existing.languageTag !== languageTag
+    ) {
+      // A token can move to another account or region between registrations.
+      await ctx.db.patch(existing._id, { userId: user._id, languageTag });
     }
   },
 });
@@ -44,26 +56,19 @@ export const sendTestToMe = action({
     if (user === null) {
       throw new Error("User not found");
     }
-    await ctx.runAction(internal.push.sendToUser, {
+    await ctx.runAction(internal.push.sendTestToUser, {
       userId: user._id,
-      title: "It works! 🎉",
-      body: "This came from a Convex action via Expo's push service.",
     });
   },
 });
 
 /**
- * Reusable fan-out: send a notification to all of a user's devices.
- * Internal — call it from your own functions (see sendTestToMe), never
- * exposed to clients directly.
+ * Sends the demo notification to all of a user's devices in each device's
+ * registered locale. Missing locale data is legacy and falls back to en-US.
  */
-export const sendToUser = internalAction({
-  args: {
-    userId: v.id("users"),
-    title: v.string(),
-    body: v.string(),
-  },
-  handler: async (ctx, { userId, title, body }) => {
+export const sendTestToUser = internalAction({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
     const tokens = await ctx.runQuery(internal.push.tokensForUser, { userId });
     if (tokens.length === 0) {
       console.log(`No push tokens registered for user ${userId}`);
@@ -74,7 +79,17 @@ export const sendToUser = internalAction({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        tokens.map((t) => ({ to: t.token, title, body, sound: "default" })),
+        tokens.map((token) => {
+          const messages = getMessages(
+            token.languageTag ?? DEFAULT_LANGUAGE_TAG,
+          );
+          return {
+            to: token.token,
+            title: messages.backend.push.title,
+            body: messages.backend.push.body,
+            sound: "default",
+          };
+        }),
       ),
     });
     const result = (await response.json()) as {

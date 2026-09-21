@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@clerk/backend": "^3.11.0",
+    "@ken/locales": "workspace:*",
     "convex": "catalog:",
     "svix": "^1.96.1"
   },

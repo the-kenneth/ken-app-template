@@ -3,9 +3,11 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 import { api } from "@ken/backend/convex/_generated/api";
+import { getUserLanguageTag } from "~/locale/utils";
 
 // How incoming notifications behave while the app is foregrounded.
 Notifications.setNotificationHandler({
@@ -27,6 +29,7 @@ Notifications.setNotificationHandler({
  * - no EAS projectId yet (run `eas init` — see README)
  */
 export function PushRegistrar() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useConvexAuth();
   const registerToken = useMutation(api.push.registerToken);
 
@@ -38,7 +41,7 @@ export function PushRegistrar() {
 
       if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
-          name: "Default",
+          name: t("mobile.push.default-channel"),
           importance: Notifications.AndroidImportance.DEFAULT,
         });
       }
@@ -60,13 +63,13 @@ export function PushRegistrar() {
       const { data: token } = await Notifications.getExpoPushTokenAsync({
         projectId,
       });
-      await registerToken({ token });
+      await registerToken({ languageTag: getUserLanguageTag(), token });
     };
 
     register().catch((error: unknown) => {
       console.warn("Push registration failed", error);
     });
-  }, [isAuthenticated, registerToken]);
+  }, [isAuthenticated, registerToken, t]);
 
   return null;
 }

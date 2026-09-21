@@ -1,6 +1,7 @@
 "use client";
 
 import * as Sentry from "@sentry/nextjs";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
 import { Button } from "@ken/ui-web/button";
@@ -15,17 +16,16 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("shared.errors");
   useEffect(() => {
     Sentry.captureException(error);
   }, [error]);
 
   return (
     <main className="container mx-auto flex max-w-2xl flex-col items-center gap-4 py-16">
-      <h1 className="text-2xl font-bold">Something went wrong</h1>
-      <p className="text-center text-muted-foreground">
-        An unexpected error occurred. Try again, or reload the page.
-      </p>
-      <Button onClick={reset}>Try again</Button>
+      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <p className="text-center text-muted-foreground">{t("description")}</p>
+      <Button onClick={reset}>{t("retry")}</Button>
     </main>
   );
 }

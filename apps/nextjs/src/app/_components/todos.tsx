@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "convex/react";
+import { useTranslations } from "next-intl";
 // Demo feature — realtime todos. Open this page on web and mobile at the
 // same time to watch mutations sync live. Remove via `pnpm init:template`.
 import { useState } from "react";
@@ -13,6 +14,7 @@ import { Input } from "@ken/ui-web/input";
 import { Skeleton } from "@ken/ui-web/skeleton";
 
 export function Todos() {
+  const t = useTranslations();
   const todos = useQuery(api.todos.list);
   const addTodo = useMutation(api.todos.add);
   const toggleTodo = useMutation(api.todos.toggle);
@@ -29,28 +31,26 @@ export function Todos() {
 
   return (
     <div className="w-full max-w-md">
-      <h2 className="mb-4 text-2xl font-bold">Todos</h2>
+      <h2 className="mb-4 text-2xl font-bold">{t("shared.todos.title")}</h2>
       <form onSubmit={onSubmit} className="mb-4 flex gap-2">
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="What needs doing?"
+          placeholder={t("shared.todos.input-placeholder")}
         />
-        <Button type="submit">Add</Button>
+        <Button type="submit">{t("shared.todos.add")}</Button>
       </form>
 
       {todos === undefined ? (
         // h-14 matches a real row: p-3 plus the h-8 ghost delete button.
         <div className="flex flex-col gap-2" role="status" aria-busy="true">
-          <span className="sr-only">Loading todos</span>
+          <span className="sr-only">{t("shared.todos.loading")}</span>
           <Skeleton className="h-14 rounded-lg" />
           <Skeleton className="h-14 rounded-lg" />
           <Skeleton className="h-14 rounded-lg" />
         </div>
       ) : todos.length === 0 ? (
-        <p className="text-muted-foreground">
-          Nothing yet. Add one here, watch it appear on mobile in realtime.
-        </p>
+        <p className="text-muted-foreground">{t("web.todos.empty")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {todos.map((todo) => (
@@ -80,6 +80,7 @@ export function Todos() {
                 variant="ghost"
                 size="sm"
                 onClick={() => void removeTodo({ id: todo._id })}
+                aria-label={t("web.todos.delete", { title: todo.text })}
               >
                 ✕
               </Button>

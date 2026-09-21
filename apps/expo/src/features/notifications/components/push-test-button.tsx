@@ -1,5 +1,8 @@
 import { useAction } from "convex/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import type { TranslationString } from "~/locale/i18n";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
@@ -7,11 +10,11 @@ import { Button } from "@ken/ui-mobile";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
-const LABELS: Record<Status, string> = {
-  idle: "Send me a test notification",
-  sending: "Sending…",
-  sent: "Sent! Check your notifications",
-  error: "Failed — see Convex logs",
+const LABEL_KEYS: Record<Status, TranslationString> = {
+  idle: "mobile.push.idle",
+  sending: "mobile.push.sending",
+  sent: "mobile.push.sent",
+  error: "mobile.push.error",
 };
 
 /**
@@ -19,6 +22,7 @@ const LABELS: Record<Status, string> = {
  * Needs a real device + EAS projectId (`eas init`) — see README.
  */
 export function PushTestButton() {
+  const { t } = useTranslation();
   const sendTest = useAction(api.push.sendTestToMe);
   const [status, setStatus] = useState<Status>("idle");
 
@@ -40,7 +44,7 @@ export function PushTestButton() {
       disabled={status === "sending"}
       onPress={() => void onPress()}
     >
-      {LABELS[status]}
+      {t(LABEL_KEYS[status])}
     </Button>
   );
 }

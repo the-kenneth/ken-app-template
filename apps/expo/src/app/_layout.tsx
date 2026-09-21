@@ -8,6 +8,7 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { I18nextProvider } from "react-i18next";
 import {
   Pressable,
   StyleSheet,
@@ -18,6 +19,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { defaultMessages } from "@ken/locales";
 import {
   PortalHost,
   resolveStoredTokens,
@@ -29,6 +31,7 @@ import { fontSize } from "@ken/ui-mobile/typography";
 import { loadEnv, SENTRY_DSN } from "~/env";
 import { StoreUser } from "~/features/auth/store-user";
 import { PushRegistrar } from "~/features/notifications/push-registrar";
+import i18n from "~/locale/i18n";
 
 // Crash reporting. No-op unless EXPO_PUBLIC_SENTRY_DSN is set — enable per
 // project by adding the DSN to .env (see README).
@@ -62,12 +65,12 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
       style={[errorStyles.container, { backgroundColor: t.colors.background }]}
     >
       <RNText style={[errorStyles.title, { color: t.colors.foreground }]}>
-        Something went wrong
+        {defaultMessages.shared.errors.title}
       </RNText>
       <RNText
         style={[errorStyles.message, { color: t.colors.mutedForeground }]}
       >
-        {error.message}
+        {defaultMessages.shared.errors.description}
       </RNText>
       <Pressable
         onPress={() => void retry()}
@@ -85,7 +88,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
             { color: t.colors.primaryForeground },
           ]}
         >
-          Try again
+          {defaultMessages.shared.errors.retry}
         </RNText>
       </Pressable>
     </View>
@@ -143,20 +146,25 @@ function AppToaster() {
 
 function RootLayout() {
   return (
-    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <ThemeProvider>
-            <RootNavigator />
-            <AppToaster />
-            {/* Must sit inside ThemeProvider: rn-primitives' Portal renders
-                children at the host's position, so portalled menus resolve
-                context from here, not from where they are declared. */}
-            <PortalHost />
-          </ThemeProvider>
-        </GestureHandlerRootView>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+    <I18nextProvider i18n={i18n}>
+      <ClerkProvider
+        publishableKey={clerkPublishableKey}
+        tokenCache={tokenCache}
+      >
+        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ThemeProvider>
+              <RootNavigator />
+              <AppToaster />
+              {/* Must sit inside ThemeProvider: rn-primitives' Portal renders
+                  children at the host's position, so portalled menus resolve
+                  context from here, not from where they are declared. */}
+              <PortalHost />
+            </ThemeProvider>
+          </GestureHandlerRootView>
+        </ConvexProviderWithClerk>
+      </ClerkProvider>
+    </I18nextProvider>
   );
 }
 

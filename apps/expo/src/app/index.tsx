@@ -1,6 +1,7 @@
 import { useClerk, useUser } from "@clerk/expo";
 import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,6 +13,7 @@ import { PushTestButton } from "~/features/notifications/components/push-test-bu
 import { Todos } from "~/features/todos/components/todos";
 
 export default function Index() {
+  const { t } = useTranslation();
   const { user } = useUser();
   const { signOut } = useClerk();
 
@@ -34,10 +36,12 @@ export default function Index() {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text variant="h3">
-              Hi, {user?.firstName ?? user?.emailAddresses[0]?.emailAddress}
+              {t("mobile.home.greeting", {
+                name: user?.firstName ?? user?.emailAddresses[0]?.emailAddress,
+              })}
             </Text>
             <Button variant="link" size="sm" onPress={() => void signOut()}>
-              Sign out
+              {t("mobile.home.sign-out")}
             </Button>
           </View>
           <PushTestButton />

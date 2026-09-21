@@ -1,7 +1,9 @@
 import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
+import * as Sentry from "@sentry/react-native";
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 
 import type { Tokens } from "@ken/tokens/native";
@@ -23,6 +25,7 @@ type Mode = "signIn" | "signUp" | "verifyEmail";
  * User & Authentication → Social connections (Google, Apple)
  */
 export function SignInScreen() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>("signIn");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,14 +56,18 @@ export function SignInScreen() {
       password,
     });
     if (signInError) {
-      setError(signInError.message);
+      Sentry.captureException(signInError);
+      setError(t("mobile.auth.sign-in-error"));
       return;
     }
     if (signIn.status === "complete") {
       const { error: finalizeError } = await signIn.finalize();
-      if (finalizeError) setError(finalizeError.message);
+      if (finalizeError) {
+        Sentry.captureException(finalizeError);
+        setError(t("mobile.auth.session-error"));
+      }
     } else {
-      setError("Additional verification required — check your Clerk config.");
+      setError(t("mobile.auth.additional-verification-error"));
     }
   };
 
@@ -71,12 +78,14 @@ export function SignInScreen() {
       password,
     });
     if (signUpError) {
-      setError(signUpError.message);
+      Sentry.captureException(signUpError);
+      setError(t("mobile.auth.sign-up-error"));
       return;
     }
     const { error: sendError } = await signUp.verifications.sendEmailCode();
     if (sendError) {
-      setError(sendError.message);
+      Sentry.captureException(sendError);
+      setError(t("mobile.auth.send-code-error"));
       return;
     }
     setMode("verifyEmail");
@@ -88,14 +97,18 @@ export function SignInScreen() {
       code,
     });
     if (verifyError) {
-      setError(verifyError.message);
+      Sentry.captureException(verifyError);
+      setError(t("mobile.auth.verify-code-error"));
       return;
     }
     if (signUp.status === "complete") {
       const { error: finalizeError } = await signUp.finalize();
-      if (finalizeError) setError(finalizeError.message);
+      if (finalizeError) {
+        Sentry.captureException(finalizeError);
+        setError(t("mobile.auth.session-error"));
+      }
     } else {
-      setError("Verification incomplete — try again.");
+      setError(t("mobile.auth.verification-incomplete-error"));
     }
   };
 
@@ -112,23 +125,24 @@ export function SignInScreen() {
           await setActive({ session: createdSessionId });
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        Sentry.captureException(err);
+        setError(t("mobile.auth.sso-error"));
       }
     },
-    [startSSOFlow],
+    [startSSOFlow, t],
   );
 
   if (mode === "verifyEmail") {
     return (
       <View style={styles.container}>
-        <Text variant="h2">Check your email</Text>
+        <Text variant="h2">{t("mobile.auth.check-email-title")}</Text>
         <Text tone="muted" style={styles.subtitle}>
-          We sent a code to {email}
+          {t("mobile.auth.check-email-description", { email })}
         </Text>
         <Input
           value={code}
           onChangeText={setCode}
-          placeholder="Verification code"
+          placeholder={t("mobile.auth.verification-code-placeholder")}
           keyboardType="number-pad"
           autoFocus
         />
@@ -138,7 +152,7 @@ export function SignInScreen() {
           </Text>
         )}
         <Button size="lg" onPress={() => void onVerifyPress()}>
-          Verify
+          {t("mobile.auth.verify")}
         </Button>
       </View>
     );
@@ -151,12 +165,18 @@ export function SignInScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Text variant="h2">{isSignIn ? "Sign in" : "Create account"}</Text>
+      <Text variant="h2">
+        {t(
+          isSignIn
+            ? "mobile.auth.sign-in-title"
+            : "mobile.auth.create-account-title",
+        )}
+      </Text>
 
       <Input
         value={email}
         onChangeText={setEmail}
-        placeholder="Email"
+        placeholder={t("mobile.auth.email-placeholder")}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
@@ -164,7 +184,7 @@ export function SignInScreen() {
       <Input
         value={password}
         onChangeText={setPassword}
-        placeholder="Password"
+        placeholder={t("mobile.auth.password-placeholder")}
         secureTextEntry
         autoComplete={isSignIn ? "current-password" : "new-password"}
       />
@@ -178,13 +198,13 @@ export function SignInScreen() {
         size="lg"
         onPress={() => void (isSignIn ? onSignInPress() : onSignUpPress())}
       >
-        {isSignIn ? "Sign in" : "Sign up"}
+        {t(isSignIn ? "mobile.auth.sign-in" : "mobile.auth.sign-up")}
       </Button>
 
       <View style={styles.divider}>
         <Separator style={styles.dividerLine} />
         <Text variant="small" tone="muted">
-          or
+          {t("mobile.auth.divider")}
         </Text>
         <Separator style={styles.dividerLine} />
       </View>
@@ -194,14 +214,14 @@ export function SignInScreen() {
         size="lg"
         onPress={() => void onSSOPress("oauth_google")}
       >
-        Continue with Google
+        {t("mobile.auth.continue-with-google")}
       </Button>
       <Button
         variant="outline"
         size="lg"
         onPress={() => void onSSOPress("oauth_apple")}
       >
-        Continue with Apple
+        {t("mobile.auth.continue-with-apple")}
       </Button>
 
       <Button
@@ -209,7 +229,11 @@ export function SignInScreen() {
         style={styles.switchMode}
         onPress={() => setMode(isSignIn ? "signUp" : "signIn")}
       >
-        {isSignIn ? "No account? Sign up" : "Already have an account? Sign in"}
+        {t(
+          isSignIn
+            ? "mobile.auth.switch-to-sign-up"
+            : "mobile.auth.switch-to-sign-in",
+        )}
       </Button>
     </KeyboardAvoidingView>
   );

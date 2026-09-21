@@ -13,15 +13,18 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@clerk/localizations": "^3.35.1",
     "@clerk/nextjs": "catalog:",
     "@ken/analytics": "workspace:*",
     "@ken/backend": "workspace:*",
+    "@ken/locales": "workspace:*",
     "@ken/ui-web": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@sentry/nextjs": "^10.63.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "convex": "catalog:",
     "next": "^16.2.10",
+    "next-intl": "^4.8.3",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "zod": "catalog:"

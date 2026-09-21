@@ -1,8 +1,10 @@
 import { createJiti } from "jiti";
+import createNextIntlPlugin from "next-intl/plugin";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const jiti = createJiti(import.meta.url);
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 await jiti.import("./src/env");
@@ -10,7 +12,12 @@ await jiti.import("./src/env");
 /** @type {import("next").NextConfig} */
 const config = {
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@ken/analytics", "@ken/backend", "@ken/ui-web"],
+  transpilePackages: [
+    "@ken/analytics",
+    "@ken/backend",
+    "@ken/locales",
+    "@ken/ui-web",
+  ],
 
   /**
    * Pin the workspace root to the monorepo root. Without this, Next.js infers
@@ -30,4 +37,4 @@ const config = {
   typescript: { ignoreBuildErrors: true },
 };
 
-export default config;
+export default withNextIntl(config);

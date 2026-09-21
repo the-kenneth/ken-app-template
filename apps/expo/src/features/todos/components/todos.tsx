@@ -2,10 +2,12 @@ import { useMutation, useQuery } from "convex/react";
 // Demo feature — realtime todos. Open web and mobile side by side to watch
 // mutations sync live. Remove via `pnpm init:template`.
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 import type { Tokens } from "@ken/tokens/native";
 import type { TodoFilter } from "~/features/todos/todo-filter";
+import type { TranslationString } from "~/locale/i18n";
 
 import { track } from "@ken/analytics";
 import { api } from "@ken/backend/convex/_generated/api";
@@ -27,16 +29,17 @@ import { useTodoFilter } from "~/features/todos/todo-filter";
 
 const FILTERS: TodoFilter[] = ["all", "active", "done"];
 
-const FILTER_LABELS: Record<TodoFilter, string> = {
-  all: "All",
-  active: "Active",
-  done: "Done",
+const FILTER_LABEL_KEYS: Record<TodoFilter, TranslationString> = {
+  all: "shared.todos.filters.all",
+  active: "shared.todos.filters.active",
+  done: "shared.todos.filters.done",
 };
 
 const isTodoFilter = (value: string): value is TodoFilter =>
   (FILTERS as string[]).includes(value);
 
 export function Todos() {
+  const { t } = useTranslation();
   const todos = useQuery(api.todos.list);
   const addTodo = useMutation(api.todos.add);
   const toggleTodo = useMutation(api.todos.toggle);
@@ -64,19 +67,19 @@ export function Todos() {
 
   return (
     <View style={styles.container}>
-      <Text variant="h3">Todos</Text>
+      <Text variant="h3">{t("shared.todos.title")}</Text>
 
       <View style={styles.row}>
         <View style={styles.grow}>
           <Input
             value={text}
             onChangeText={setText}
-            placeholder="What needs doing?"
+            placeholder={t("shared.todos.input-placeholder")}
             onSubmitEditing={onAdd}
             returnKeyType="done"
           />
         </View>
-        <Button onPress={onAdd}>Add</Button>
+        <Button onPress={onAdd}>{t("shared.todos.add")}</Button>
       </View>
 
       {/* Client-only UI state, held in zustand rather than Convex. The menu
@@ -85,11 +88,15 @@ export function Todos() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
-              Show: {FILTER_LABELS[filter]}
+              {t("mobile.todos.show-filter", {
+                filter: t(FILTER_LABEL_KEYS[filter]),
+              })}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Filter</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {t("mobile.todos.filter-label")}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup
               value={filter}
@@ -99,7 +106,7 @@ export function Todos() {
             >
               {FILTERS.map((option) => (
                 <DropdownMenuRadioItem key={option} value={option}>
-                  {FILTER_LABELS[option]}
+                  {t(FILTER_LABEL_KEYS[option])}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
@@ -114,7 +121,7 @@ export function Todos() {
           style={styles.list}
           accessible
           accessibilityRole="progressbar"
-          accessibilityLabel="Loading todos"
+          accessibilityLabel={t("shared.todos.loading")}
         >
           <Skeleton style={styles.skeletonRow} />
           <Skeleton style={styles.skeletonRow} />
@@ -126,10 +133,7 @@ export function Todos() {
           keyExtractor={(todo) => todo._id}
           contentContainerStyle={styles.list}
           ListEmptyComponent={
-            <Text tone="muted">
-              Nothing here. Add one, or add one on the web app and watch it
-              appear in realtime.
-            </Text>
+            <Text tone="muted">{t("mobile.todos.empty")}</Text>
           }
           renderItem={({ item: todo }) => (
             <View style={styles.todoRow}>
@@ -152,7 +156,9 @@ export function Todos() {
                 variant="ghost"
                 size="sm"
                 onPress={() => void removeTodo({ id: todo._id })}
-                accessibilityLabel={`Delete ${todo.text}`}
+                accessibilityLabel={t("mobile.todos.delete", {
+                  title: todo.text,
+                })}
               >
                 ✕
               </Button>

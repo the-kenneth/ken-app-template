@@ -1,0 +1,101 @@
+{
+  "shared": {
+    "todos": {
+      "title": "Todos",
+      "input-placeholder": "What needs doing?",
+      "add": "Add",
+      "loading": "Loading todos",
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "done": "Done"
+      }
+    },
+    "errors": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Try again, or reload the app.",
+      "retry": "Try again"
+    }
+  },
+  "web": {
+    "metadata": {
+      "title": "Ken",
+      "description": "Web + mobile monorepo template (Next.js, Expo, Convex, Clerk)"
+    },
+    "home": {
+      "brand-name": "Ken",
+      "template-label": "Template",
+      "stack-description": "Next.js + Expo + Convex + Clerk"
+    },
+    "auth": {
+      "checking-status": "Checking sign-in status",
+      "sign-in": "Sign in",
+      "sign-up": "Sign up"
+    },
+    "todos": {
+      "empty": "Nothing yet. Add one here, watch it appear on mobile in realtime.",
+      "delete": "Delete {title}"
+    },
+    "not-found": {
+      "code": "404",
+      "message": "This page could not be found.",
+      "back-home": "Back home"
+    },
+    "theme": {
+      "toggle": "Toggle theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+  "mobile": {
+    "auth": {
+      "sign-in-title": "Sign in",
+      "create-account-title": "Create account",
+      "check-email-title": "Check your email",
+      "check-email-description": "We sent a code to {{email}}",
+      "email-placeholder": "Email",
+      "password-placeholder": "Password",
+      "verification-code-placeholder": "Verification code",
+      "verify": "Verify",
+      "sign-in": "Sign in",
+      "sign-up": "Sign up",
+      "divider": "or",
+      "continue-with-google": "Continue with Google",
+      "continue-with-apple": "Continue with Apple",
+      "switch-to-sign-up": "No account? Sign up",
+      "switch-to-sign-in": "Already have an account? Sign in",
+      "additional-verification-error": "Additional verification is required. Check your authentication configuration.",
+      "verification-incomplete-error": "Verification could not be completed. Try again.",
+      "sign-in-error": "We could not sign you in. Check your details and try again.",
+      "sign-up-error": "We could not create your account. Check your details and try again.",
+      "send-code-error": "We could not send a verification code. Try again.",
+      "verify-code-error": "That verification code could not be accepted. Check it and try again.",
+      "session-error": "Your session could not be started. Try again.",
+      "sso-error": "Single sign-on could not be completed. Try again."
+    },
+    "home": {
+      "greeting": "Hi, {{name}}",
+      "sign-out": "Sign out"
+    },
+    "todos": {
+      "show-filter": "Show: {{filter}}",
+      "filter-label": "Filter",
+      "empty": "Nothing here. Add one, or add one on the web app and watch it appear in realtime.",
+      "delete": "Delete {{title}}"
+    },
+    "push": {
+      "idle": "Send me a test notification",
+      "sending": "Sending…",
+      "sent": "Sent! Check your notifications",
+      "error": "Failed — see Convex logs",
+      "default-channel": "Default"
+    }
+  },
+  "backend": {
+    "push": {
+      "title": "It works! 🎉",
+      "body": "This notification was localized by a Convex action and sent through Expo's push service."
+    }
+  }
+}

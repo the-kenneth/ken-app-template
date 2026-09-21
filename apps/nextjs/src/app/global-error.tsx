@@ -3,6 +3,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 
+import { defaultMessages } from "@ken/locales";
 import { Button } from "@ken/ui-web/button";
 import "~/app/styles.css";
 
@@ -22,14 +23,16 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en">
+    <html lang="en-US">
       <body className="bg-background font-sans text-foreground antialiased">
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
-          <h1 className="text-2xl font-bold">Something went wrong</h1>
+          <h1 className="text-2xl font-bold">
+            {defaultMessages.shared.errors.title}
+          </h1>
           <p className="text-center text-muted-foreground">
-            An unexpected error occurred. Try again, or reload the page.
+            {defaultMessages.shared.errors.description}
           </p>
-          <Button onClick={reset}>Try again</Button>
+          <Button onClick={reset}>{defaultMessages.shared.errors.retry}</Button>
         </main>
       </body>
     </html>

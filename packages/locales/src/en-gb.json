@@ -1,0 +1,7 @@
+{
+  "backend": {
+    "push": {
+      "body": "This notification was localised by a Convex action and sent through Expo's push service."
+    }
+  }
+}

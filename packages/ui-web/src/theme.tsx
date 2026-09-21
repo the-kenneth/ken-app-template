@@ -160,7 +160,16 @@ export function useThemeMode() {
   return context;
 }
 
-export function ThemeToggle() {
+export interface ThemeToggleProps {
+  labels: {
+    toggle: string;
+    light: string;
+    dark: string;
+    system: string;
+  };
+}
+
+export function ThemeToggle({ labels }: ThemeToggleProps) {
   const { setMode } = useThemeMode();
 
   return (
@@ -174,18 +183,18 @@ export function ThemeToggle() {
           <SunIcon className="light:scale-100! auto:scale-0!" />
           <MoonIcon className="dark:scale-100! auto:scale-0!" />
           <MonitorIcon className="auto:scale-100!" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{labels.toggle}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setMode("light")}>
-          Light
+          {labels.light}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setMode("dark")}>
-          Dark
+          {labels.dark}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setMode("auto")}>
-          System
+          {labels.system}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
