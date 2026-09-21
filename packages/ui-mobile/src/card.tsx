@@ -22,7 +22,7 @@ const buildStyles = (t: Tokens) =>
       boxShadow: t.shadows.sm,
     },
     header: { gap: t.spacing * 2, paddingHorizontal: t.spacing * 6 },
-    title: { color: t.colors.cardForeground, fontWeight: "600" },
+    title: { color: t.colors.cardForeground },
     action: { position: "absolute", top: 0, right: t.spacing * 6 },
     content: { paddingHorizontal: t.spacing * 6 },
     footer: {
@@ -49,7 +49,7 @@ export function CardHeader({ style, ...props }: ViewProps) {
 
 export function CardTitle({ style, ...props }: TextProps) {
   const styles = useStyles();
-  return <Text style={[styles.title, style]} {...props} />;
+  return <Text weight="semibold" style={[styles.title, style]} {...props} />;
 }
 
 export function CardDescription({ style, ...props }: TextProps) {

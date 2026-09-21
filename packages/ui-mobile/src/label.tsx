@@ -10,7 +10,5 @@ export type LabelProps = Omit<TextProps, "variant">;
  * on the field itself.
  */
 export function Label({ style, ...props }: LabelProps) {
-  return (
-    <Text variant="small" style={[{ fontWeight: "500" }, style]} {...props} />
-  );
+  return <Text variant="small" weight="medium" style={style} {...props} />;
 }

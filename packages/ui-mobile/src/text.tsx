@@ -13,8 +13,16 @@ import { fontSize, lineHeight } from "./typography";
  * that web gets free from semantic tags. Deliberately mobile-only: the scale
  * below is not shared with web, which uses Tailwind's own steps.
  */
-export type TextVariant = "h1" | "h2" | "h3" | "body" | "small" | "caption";
+export type TextVariant =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "body"
+  | "small"
+  | "caption";
 export type TextTone = "default" | "muted" | "primary" | "destructive";
+export type TextWeight = "regular" | "medium" | "semibold" | "bold";
 
 const VARIANTS: Record<TextVariant, TextStyle> = {
   h1: {
@@ -30,6 +38,7 @@ const VARIANTS: Record<TextVariant, TextStyle> = {
     letterSpacing: -0.6,
   },
   h3: { fontSize: fontSize.h3, lineHeight: lineHeight.h3, fontWeight: "600" },
+  h4: { fontSize: fontSize.h4, lineHeight: lineHeight.h4, fontWeight: "600" },
   body: {
     fontSize: fontSize.body,
     lineHeight: lineHeight.body,
@@ -47,6 +56,13 @@ const VARIANTS: Record<TextVariant, TextStyle> = {
   },
 };
 
+const WEIGHTS: Record<TextWeight, TextStyle["fontWeight"]> = {
+  regular: "400",
+  medium: "500",
+  semibold: "600",
+  bold: "700",
+};
+
 const TONES: Record<TextTone, ColorToken> = {
   default: "foreground",
   muted: "mutedForeground",
@@ -57,18 +73,24 @@ const TONES: Record<TextTone, ColorToken> = {
 export interface TextProps extends RNTextProps {
   variant?: TextVariant;
   tone?: TextTone;
+  weight?: TextWeight;
 }
 
 export function Text({
   variant = "body",
   tone = "default",
+  weight,
   style,
   ...props
 }: TextProps) {
   const tokens = useTokens();
   const resolved = useMemo(
-    () => [VARIANTS[variant], { color: tokens.colors[TONES[tone]] }],
-    [variant, tone, tokens],
+    () => [
+      VARIANTS[variant],
+      { color: tokens.colors[TONES[tone]] },
+      weight === undefined ? null : { fontWeight: WEIGHTS[weight] },
+    ],
+    [variant, tone, weight, tokens],
   );
 
   return <RNText style={[resolved, style]} {...props} />;
