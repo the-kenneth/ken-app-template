@@ -48,6 +48,8 @@ import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
 import { fontSize } from "./typography";
 
+export { PortalHost } from "@rn-primitives/portal";
+
 /**
  * Mirrors `@ken/ui-web/dropdown-menu`. Behaviour and accessibility come from
  * rn-primitives, which is style-agnostic in the same way Radix is on web — so
@@ -140,25 +142,31 @@ export function DropdownMenuGroup(props: GroupProps) {
   return <Group {...props} />;
 }
 
-export function DropdownMenuContent({
+export function DropdownMenuContent(
+  props: ContentProps & { style?: StyleProp<ViewStyle> },
+) {
+  return (
+    <Portal>
+      <PortalledContent {...props} />
+    </Portal>
+  );
+}
+
+function PortalledContent({
   style,
   sideOffset = 4,
   ...props
 }: ContentProps & { style?: StyleProp<ViewStyle> }) {
   const styles = useStyles();
   return (
-    <Portal>
-      {/* Native has no implicit dismissal layer — Overlay is the tap-catcher
-          Radix provides for free on web. */}
-      <Overlay style={styles.overlay}>
-        <Content
-          sideOffset={sideOffset}
-          // Content takes a single resolved style, not the array form.
-          style={StyleSheet.flatten([styles.content, style])}
-          {...props}
-        />
-      </Overlay>
-    </Portal>
+    <Overlay style={styles.overlay}>
+      <Content
+        sideOffset={sideOffset}
+        // Content takes a single resolved style, not the array form.
+        style={StyleSheet.flatten([styles.content, style])}
+        {...props}
+      />
+    </Overlay>
   );
 }
 

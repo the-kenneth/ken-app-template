@@ -48,7 +48,20 @@ const ThemeModeContext = createContext<ThemeModeContextValue | undefined>(
 );
 const TokensContext = createContext<Tokens | undefined>(undefined);
 
-export function ThemeProvider({ children }: PropsWithChildren) {
+export interface ThemeProviderProps extends PropsWithChildren {
+  /** Pins a nested surface to one resolved appearance. */
+  scheme?: ColorScheme;
+}
+
+export function ThemeProvider({ scheme, children }: ThemeProviderProps) {
+  return scheme === undefined ? (
+    <StoredAppearance>{children}</StoredAppearance>
+  ) : (
+    <TokensContext value={tokens[scheme]}>{children}</TokensContext>
+  );
+}
+
+function StoredAppearance({ children }: PropsWithChildren) {
   const systemScheme: ColorScheme =
     useColorScheme() === "dark" ? "dark" : "light";
   const [mode, setModeState] = useState(getStoredMode);

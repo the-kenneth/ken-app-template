@@ -20,6 +20,8 @@ There is no react-native-web runtime.
   controls.
 - Mobile styles read `useTokens()` and memoise a `buildStyles(tokens)` result.
   Web resolves the same values through generated CSS variables.
+- A nested `ThemeProvider scheme="light|dark"` pins tokens for a surface whose
+  own ground decides its contrast; the root provider remains preference-backed.
 - Theme choice is synchronous on both platforms: localStorage on web and MMKV
   on mobile, so the saved appearance is known before first paint.
 - `Sheet` and `Touchable` are mobile-only because their interaction belongs to
