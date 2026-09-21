@@ -3,7 +3,6 @@ import { describe, expect, test } from "vitest";
 import {
   baseMessages,
   enGBOverrides,
-  enUSOverrides,
   getMessages,
   getWebMessages,
 } from "./messages";
@@ -25,11 +24,13 @@ describe("message catalogues", () => {
     expect(messages.backend.push.title).toBe("It works! 🎉");
   });
 
+  test("US English uses the base catalogue without an override", () => {
+    expect(getMessages("en-US")).toBe(baseMessages);
+  });
+
   test("region overrides cannot introduce unknown message keys", () => {
     const baseKeys = new Set(leafPaths(baseMessages));
-    const overrideKeys = [enUSOverrides, enGBOverrides].flatMap((messages) =>
-      leafPaths(messages),
-    );
+    const overrideKeys = leafPaths(enGBOverrides);
 
     expect(overrideKeys.filter((key) => !baseKeys.has(key))).toEqual([]);
   });

@@ -1,13 +1,11 @@
 import type { SupportedLanguageTag } from "./utils";
 
 import enGB from "./en-gb.json";
-import enUS from "./en-us.json";
 import en from "./en.json";
 
 type MessageRecord = { [key: string]: MessageRecord | string };
 
-const regionalMessages: Record<SupportedLanguageTag, MessageRecord> = {
-  "en-US": enUS,
+const regionalMessages: Partial<Record<SupportedLanguageTag, MessageRecord>> = {
   "en-GB": enGB,
 };
 
@@ -33,11 +31,12 @@ const mergeMessages = (
 export type Messages = typeof en;
 
 export const baseMessages = en;
-export const enUSOverrides = enUS;
 export const enGBOverrides = enGB;
 
-export const getMessages = (languageTag: SupportedLanguageTag): Messages =>
-  mergeMessages(en, regionalMessages[languageTag]) as Messages;
+export const getMessages = (languageTag: SupportedLanguageTag): Messages => {
+  const override = regionalMessages[languageTag];
+  return override ? (mergeMessages(en, override) as Messages) : en;
+};
 
 export const getWebMessages = (languageTag: SupportedLanguageTag) => {
   const messages = getMessages(languageTag);

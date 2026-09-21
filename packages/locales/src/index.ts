@@ -17,7 +17,6 @@ export {
   baseMessages,
   defaultMessages,
   enGBOverrides,
-  enUSOverrides,
   getMessages,
   getWebMessages,
 } from "./messages";

@@ -3,12 +3,7 @@ import type { LanguageDetectorModule, ParseKeys } from "i18next";
 import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import {
-  baseMessages,
-  enGBOverrides,
-  enUSOverrides,
-  SUPPORTED_LOCALES,
-} from "@ken/locales";
+import { baseMessages, enGBOverrides, SUPPORTED_LOCALES } from "@ken/locales";
 
 import { getUserLanguageTag } from "./utils";
 
@@ -44,7 +39,6 @@ void i18n
     interpolation: { escapeValue: false, skipOnVariables: false },
     resources: {
       en: { translation: baseMessages },
-      "en-US": { translation: enUSOverrides },
       "en-GB": { translation: enGBOverrides },
     },
     react: { useSuspense: false },
