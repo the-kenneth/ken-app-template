@@ -66,6 +66,8 @@ backend test with `pnpm -F @ken/backend exec vitest run todos.test.ts`.
   and `packages/backend/convex/_generated/`.
 - Apps load the root `.env` through `dotenv -e ../../.env`; cloud builds use
   their platform environment configuration.
+- App-owned device values use `createStore` from
+  `apps/expo/src/device-storage.ts`; features never open MMKV directly.
 - Node and pnpm versions are fixed in `.tool-versions` and `package.json`.
 
 Auth, server rendering, native dependencies, icons, testing, and design-system

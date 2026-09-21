@@ -49,8 +49,49 @@
     "typescript/no-unnecessary-condition": [
       "warn",
       { "allowConstantLoopConditions": true }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["react-native-mmkv", "react-native-mmkv/**"],
+            "message": "App-owned persistence lives in apps/expo/src/device-storage.ts. Build a store with createStore instead."
+          },
+          {
+            "group": ["**/device-storage"],
+            "importNames": ["deviceStorage"],
+            "message": "The raw instance is the device test seam. Build a store with createStore instead."
+          }
+        ]
+      }
     ]
   },
+  "overrides": [
+    {
+      "files": [
+        "apps/expo/src/device-storage.ts",
+        "packages/ui-mobile/src/theme.tsx"
+      ],
+      "rules": { "no-restricted-imports": "off" }
+    },
+    {
+      "files": ["apps/expo/test/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["react-native-mmkv", "react-native-mmkv/**"],
+                "message": "Tests express device state through the device-storage seam."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
   "ignorePatterns": [
     "**/_generated/**",
     "**/.next/**",

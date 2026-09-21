@@ -10,4 +10,11 @@ export class MMKV {
   delete(key: string) {
     store.delete(key);
   }
+  clearAll() {
+    store.clear();
+  }
 }
+
+export const useMMKVString = (key: string, instance: MMKV) => [
+  instance.getString(key),
+];
