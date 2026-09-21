@@ -10,13 +10,15 @@
     "./icon": "./src/icon.tsx",
     "./input": "./src/input.tsx",
     "./label": "./src/label.tsx",
+    "./metrics": "./src/metrics.ts",
     "./separator": "./src/separator.tsx",
     "./sheet": "./src/sheet.tsx",
     "./skeleton": "./src/skeleton.tsx",
     "./text": "./src/text.tsx",
     "./theme": "./src/theme.tsx",
     "./toast": "./src/toast.tsx",
-    "./touchable": "./src/touchable.tsx"
+    "./touchable": "./src/touchable.tsx",
+    "./typography": "./src/typography.ts"
   },
   "license": "MIT",
   "scripts": {

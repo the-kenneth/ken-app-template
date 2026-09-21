@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 import { Text } from "@ken/ui-mobile/text";
 import { ThemeProvider } from "@ken/ui-mobile/theme";
+import { fontSize, lineHeight } from "@ken/ui-mobile/typography";
 
 it("owns semantic text size and weight", () => {
   render(
@@ -16,8 +17,8 @@ it("owns semantic text size and weight", () => {
   expect(
     StyleSheet.flatten(screen.getByTestId("heading").props.style),
   ).toMatchObject({
-    fontSize: 20,
-    lineHeight: 28,
+    fontSize: fontSize.h4,
+    lineHeight: lineHeight.h4,
     fontWeight: "700",
   });
 });

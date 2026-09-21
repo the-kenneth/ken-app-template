@@ -19,13 +19,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
-  fontSize,
   PortalHost,
   resolveStoredTokens,
   ThemeProvider,
   useTokens,
 } from "@ken/ui-mobile";
 import { Toaster } from "@ken/ui-mobile/toast";
+import { fontSize } from "@ken/ui-mobile/typography";
 import { loadEnv, SENTRY_DSN } from "~/env";
 import { StoreUser } from "~/features/auth/store-user";
 import { PushRegistrar } from "~/features/notifications/push-registrar";
