@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx",
     "./dropdown-menu": "./src/dropdown-menu.tsx",
     "./icon": "./src/icon.tsx",
     "./input": "./src/input.tsx",
@@ -12,7 +13,9 @@
     "./separator": "./src/separator.tsx",
     "./skeleton": "./src/skeleton.tsx",
     "./text": "./src/text.tsx",
-    "./theme": "./src/theme.tsx"
+    "./theme": "./src/theme.tsx",
+    "./toast": "./src/toast.tsx",
+    "./touchable": "./src/touchable.tsx"
   },
   "license": "MIT",
   "scripts": {

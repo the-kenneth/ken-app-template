@@ -3,6 +3,7 @@ import type { TextInputProps } from "react-native";
 import { useMemo, useState } from "react";
 import { TextInput } from "react-native";
 
+import { controlHeight } from "./metrics";
 import { shadowToCss } from "./shadow";
 import { useTokens } from "./theme";
 import { fontSize } from "./typography";
@@ -17,7 +18,7 @@ export function Input({ style, onFocus, onBlur, ...props }: InputProps) {
   const styles = useMemo(() => {
     const dark = tokens.scheme === "dark";
     return {
-      height: 36,
+      height: controlHeight,
       width: "100%",
       borderWidth: 1,
       borderRadius: tokens.radius.md,

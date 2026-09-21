@@ -9,6 +9,15 @@
 export { Button } from "./button";
 export type { ButtonProps } from "./button";
 export {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./card";
+export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -37,6 +46,9 @@ export type { SeparatorProps } from "./separator";
 export { Skeleton } from "./skeleton";
 export { Text } from "./text";
 export type { TextProps, TextTone, TextVariant } from "./text";
+export { toast, Toaster } from "./toast";
+export { Touchable } from "./touchable";
+export type { TouchableFeedback, TouchableProps } from "./touchable";
 export {
   resolveStoredTokens,
   ThemeProvider,

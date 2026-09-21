@@ -16,6 +16,7 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
   fontSize,
@@ -24,6 +25,7 @@ import {
   ThemeProvider,
   useTokens,
 } from "@ken/ui-mobile";
+import { Toaster } from "@ken/ui-mobile/toast";
 import { PushRegistrar } from "~/components/push-registrar";
 import { StoreUser } from "~/components/store-user";
 import { loadEnv, SENTRY_DSN } from "~/env";
@@ -134,6 +136,11 @@ function RootNavigator() {
   );
 }
 
+function AppToaster() {
+  const insets = useSafeAreaInsets();
+  return <Toaster bottomOffset={insets.bottom} />;
+}
+
 function RootLayout() {
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
@@ -141,6 +148,7 @@ function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <ThemeProvider>
             <RootNavigator />
+            <AppToaster />
             {/* Must sit inside ThemeProvider: rn-primitives' Portal renders
                 children at the host's position, so portalled menus resolve
                 context from here, not from where they are declared. */}

@@ -16,6 +16,7 @@ import type {
 } from "@ken/tokens/contracts";
 import type { Tokens } from "@ken/tokens/native";
 
+import { controlHeight, minTouchTarget } from "./metrics";
 import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
 import { fontSize } from "./typography";
@@ -72,10 +73,15 @@ const buildVariants = (t: Tokens): Record<ButtonVariant, VariantStyle> => ({
 });
 
 const SIZES: Record<ButtonSize, ViewStyle> = {
-  default: { height: 36, paddingHorizontal: 16, gap: 8 },
-  sm: { height: 32, paddingHorizontal: 12, gap: 6 },
-  lg: { height: 40, paddingHorizontal: 24, gap: 8 },
-  icon: { height: 36, width: 36, paddingHorizontal: 0, gap: 0 },
+  default: { height: controlHeight, paddingHorizontal: 16, gap: 8 },
+  sm: { height: minTouchTarget, paddingHorizontal: 12, gap: 6 },
+  lg: { height: 56, paddingHorizontal: 24, gap: 8 },
+  icon: {
+    height: controlHeight,
+    width: controlHeight,
+    paddingHorizontal: 0,
+    gap: 0,
+  },
 };
 
 export interface ButtonProps extends Omit<PressableProps, "style"> {

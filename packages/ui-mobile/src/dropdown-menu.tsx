@@ -43,6 +43,7 @@ import type { MenuItemVariant } from "@ken/tokens/contracts";
 import type { Tokens } from "@ken/tokens/native";
 
 import { Icon } from "./icon";
+import { minTouchTarget } from "./metrics";
 import { renderChildren } from "./renderChildren";
 import { useTokens } from "./theme";
 import { fontSize } from "./typography";
@@ -76,6 +77,7 @@ const buildStyles = (t: Tokens) =>
       gap: 8,
       paddingHorizontal: 8,
       paddingVertical: 6,
+      minHeight: minTouchTarget,
       borderRadius: t.radius.sm,
     },
     itemPressed: { backgroundColor: t.colors.accent },

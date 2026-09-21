@@ -170,8 +170,8 @@ const buildStyles = (t: Tokens) =>
     row: { flexDirection: "row", alignItems: "center", gap: t.spacing * 2 },
     grow: { flex: 1 },
     list: { gap: t.spacing * 2 },
-    // Matches a real row: 12pt padding plus the 32pt sm button inside it.
-    skeletonRow: { height: 56, borderRadius: t.radius.lg },
+    // Matches a real row: 12pt padding plus the 44pt sm button inside it.
+    skeletonRow: { height: 68, borderRadius: t.radius.lg },
     todoRow: {
       flexDirection: "row",
       alignItems: "center",
