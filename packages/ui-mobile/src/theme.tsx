@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 
 import { createContext, use, useMemo, useState } from "react";
 import { useColorScheme } from "react-native";
-import { MMKV } from "react-native-mmkv";
+import { createMMKV } from "react-native-mmkv";
 
 import type { ColorScheme, ThemeMode } from "@ken/tokens/contracts";
 import type { Tokens } from "@ken/tokens/native";
@@ -13,7 +13,7 @@ import { tokens } from "@ken/tokens/native";
 // choice is known during the first render, so the app never paints in the
 // system scheme and then snap to the user's. This is the native counterpart
 // of the blocking themeDetectorScript in @ken/ui-web.
-const storage = new MMKV({ id: "ken-theme" });
+const storage = createMMKV({ id: "ken-theme" });
 const THEME_KEY = "theme-mode";
 
 const MODES: ThemeMode[] = ["light", "dark", "auto"];

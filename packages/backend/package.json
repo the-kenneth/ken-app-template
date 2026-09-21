@@ -32,6 +32,6 @@
     "@ken/tsconfig": "workspace:*",
     "convex-test": "^0.0.54",
     "typescript": "catalog:",
-    "vitest": "^4.1.10"
+    "vitest": "catalog:"
   }
 }

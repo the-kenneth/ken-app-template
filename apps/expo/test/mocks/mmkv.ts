@@ -1,20 +1,29 @@
-const store = new Map<string, string>();
+const stores = new Map<string, Map<string, string>>();
 
-export class MMKV {
+class MockMMKV {
+  private readonly store: Map<string, string>;
+
+  constructor(id: string) {
+    this.store = stores.get(id) ?? new Map();
+    stores.set(id, this.store);
+  }
+
   getString(key: string) {
-    return store.get(key);
+    return this.store.get(key);
   }
   set(key: string, value: string) {
-    store.set(key, value);
+    this.store.set(key, value);
   }
-  delete(key: string) {
-    store.delete(key);
+  remove(key: string) {
+    this.store.delete(key);
   }
   clearAll() {
-    store.clear();
+    this.store.clear();
   }
 }
 
-export const useMMKVString = (key: string, instance: MMKV) => [
+export const createMMKV = ({ id = "mmkv.default" } = {}) => new MockMMKV(id);
+
+export const useMMKVString = (key: string, instance: MockMMKV) => [
   instance.getString(key),
 ];

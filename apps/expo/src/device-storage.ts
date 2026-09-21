@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { MMKV, useMMKVString } from "react-native-mmkv";
+import { createMMKV, useMMKVString } from "react-native-mmkv";
 
 // App-owned values share one instance so persistence remains discoverable.
-export const deviceStorage = new MMKV({ id: "ken" });
+export const deviceStorage = createMMKV({ id: "ken" });
 
 /** A typed value persisted on this device. */
 export interface DeviceStore<T> {
@@ -46,7 +46,7 @@ export function createStore<T>({
       const decoded = decode(deviceStorage.getString(key));
       if (decoded !== null) return decoded.value;
 
-      deviceStorage.delete(key);
+      deviceStorage.remove(key);
       return empty;
     },
 
@@ -55,7 +55,7 @@ export function createStore<T>({
     },
 
     forget() {
-      deviceStorage.delete(key);
+      deviceStorage.remove(key);
     },
 
     use() {
