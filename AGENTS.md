@@ -105,6 +105,12 @@ its public prop names into ui-mobile when the interface belongs on both.
 `packages/analytics` defines event names and payloads once. Add events to
 `AnalyticsEvents`; call sites stay unchanged when a vendor adapter is added.
 
+## Agent skills
+
+Repo-local skills live in `.agents/skills/`; `.claude/skills/` contains the
+matching discovery symlinks. The vendored TrueSheet consumer guide records its
+upstream version and license in `.agents/skills/truesheet-usage/UPSTREAM.md`.
+
 ## Commits and pull requests
 
 Use Conventional Commit titles with an area-oriented scope where useful, for
