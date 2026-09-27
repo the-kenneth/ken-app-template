@@ -15,7 +15,7 @@ export interface DeviceStore<T> {
 
 interface DeviceStoreSpec<T> {
   key: string;
-  parse: (payload: unknown) => T | null;
+  parse: (storedJson: unknown) => T | null;
   empty: T;
 }
 
@@ -28,14 +28,14 @@ export function createStore<T>({
   const decode = (stored: string | undefined): { value: T } | null => {
     if (stored === undefined) return { value: empty };
 
-    let payload: unknown;
+    let storedJson: unknown;
     try {
-      payload = JSON.parse(stored);
+      storedJson = JSON.parse(stored);
     } catch {
       return null;
     }
 
-    const parsed = parse(payload);
+    const parsed = parse(storedJson);
     return parsed === null ? null : { value: parsed };
   };
 

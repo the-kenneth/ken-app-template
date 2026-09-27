@@ -3,7 +3,7 @@ import { createStore, deviceStorage } from "~/device-storage";
 const setting = createStore({
   key: "test-setting-v1",
   empty: "default",
-  parse: (payload) => (typeof payload === "string" ? payload : null),
+  parse: (stored) => (typeof stored === "string" ? stored : null),
 });
 
 describe("device storage", () => {

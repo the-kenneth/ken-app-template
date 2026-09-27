@@ -10,7 +10,7 @@
     "node",
     "promise"
   ],
-  "jsPlugins": ["eslint-plugin-turbo"],
+  "jsPlugins": ["eslint-plugin-turbo", "./tooling/oxlint/naming.mjs"],
   "options": {
     "typeAware": true
   },
@@ -24,6 +24,8 @@
   },
   "rules": {
     "turbo/no-undeclared-env-vars": "error",
+    "naming/no-shape-only-names": "error",
+    "naming/no-kind": "error",
     "no-underscore-dangle": "off",
     "import/no-unassigned-import": [
       "warn",
@@ -72,6 +74,10 @@
     ]
   },
   "overrides": [
+    {
+      "files": ["tooling/oxlint/**"],
+      "rules": { "naming/no-kind": "off" }
+    },
     {
       "files": [
         "apps/expo/src/device-storage.ts",

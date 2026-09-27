@@ -73,6 +73,39 @@ backend test with `pnpm -F @ken/backend exec vitest run todos.test.ts`.
 Auth, server rendering, native dependencies, icons, testing, and design-system
 details live in the matching file under `docs/rules/`.
 
+## Naming
+
+A name says **what thing** a value is, not only its **shape**. The reader of
+this code often did not write it, so the name must carry the context that the
+surrounding files would otherwise give.
+
+- **Name the thing.** Use the domain term when the value is a domain concept
+  (`todo`, `pushToken`, `signedInUser`), taken from `CONTEXT.md` once the app
+  has one, and a specific role word when it is only a step in a calculation
+  (`parsedDate`, `remainingTodos`).
+- **Shape words qualify, they never stand alone.** `data`, `item`, `entry`,
+  `info`, `raw`, `value`, `result`, `list`, `map`, `next`, `current` and their
+  kin say what a value looks like, not what it is. `todoList` is fine;
+  `itemList`, `rawData` and a bare `entry` are not.
+- **A bare shape word is fine only when its meaning is on screen** — within
+  about five lines, such as `.map((todo) => …)` or
+  `const result = schema.safeParse(input)` checked on the next line.
+- **A field takes its context from its owner.** `todo.completedAt` is clear
+  because `todo` names it; `todos[].type` is not, because nothing names what
+  type.
+- **Never use `kind`**, alone or in a compound (`fileKind`, `StatusKind`). It
+  names no concept; say what distinguishes the values — `fileFormat`,
+  `outcome`, `severity`.
+- **`type` always needs a qualifier** outside a five-line scope: it means
+  something different in every table.
+- **A Convex function reads with its module** — `api.todos.list` is clear, a
+  bare `api.users.info` would not be.
+
+`naming/no-shape-only-names` (a local Oxlint plugin in
+`tooling/oxlint/naming.mjs`) fails a binding made only of shape words, and
+`naming/no-kind` fails any declared name containing `kind`; the rest is for
+review.
+
 ## Code comments
 
 - Keep comments to one or two lines and state the single load-bearing reason.

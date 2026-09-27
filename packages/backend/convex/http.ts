@@ -59,14 +59,14 @@ async function validateRequest(req: Request): Promise<WebhookEvent | null> {
     console.error("CLERK_WEBHOOK_SECRET is not set in the Convex dashboard");
     return null;
   }
-  const payload = await req.text();
+  const body = await req.text();
   const svixHeaders = {
     "svix-id": req.headers.get("svix-id") ?? "",
     "svix-timestamp": req.headers.get("svix-timestamp") ?? "",
     "svix-signature": req.headers.get("svix-signature") ?? "",
   };
   try {
-    return new Webhook(secret).verify(payload, svixHeaders) as WebhookEvent;
+    return new Webhook(secret).verify(body, svixHeaders) as WebhookEvent;
   } catch (error) {
     console.error("Clerk webhook verification failed", error);
     return null;

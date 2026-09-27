@@ -15,17 +15,17 @@ const SHOWN_FOR = 4000;
 
 let nextId = 1;
 let visibleToasts: ToastEntry[] = [];
-const listeners = new Set<(entries: ToastEntry[]) => void>();
+const listeners = new Set<(toasts: ToastEntry[]) => void>();
 
-function publish(entries: ToastEntry[]) {
-  visibleToasts = entries;
+function publish(toasts: ToastEntry[]) {
+  visibleToasts = toasts;
   for (const listener of listeners) listener(visibleToasts);
 }
 
 function announce(message: string) {
-  const entry = { id: nextId++, message };
-  publish([...visibleToasts, entry]);
-  return entry.id;
+  const toastEntry = { id: nextId++, message };
+  publish([...visibleToasts, toastEntry]);
+  return toastEntry.id;
 }
 
 // Mobile counterpart to the web toast facade.
@@ -33,7 +33,7 @@ export const toast = Object.assign((message: string) => announce(message), {
   error: (message: string) => announce(message),
   dismiss: (id?: number) =>
     publish(
-      id === undefined ? [] : visibleToasts.filter((entry) => entry.id !== id),
+      id === undefined ? [] : visibleToasts.filter((shown) => shown.id !== id),
     ),
 });
 
@@ -41,37 +41,37 @@ export const toast = Object.assign((message: string) => announce(message), {
 export function Toaster({ bottomOffset = 0 }: { bottomOffset?: number }) {
   const tokens = useTokens();
   const styles = useMemo(() => buildStyles(tokens), [tokens]);
-  const [entries, setEntries] = useState(visibleToasts);
+  const [toasts, setToasts] = useState(visibleToasts);
 
   useEffect(() => {
-    listeners.add(setEntries);
+    listeners.add(setToasts);
     return () => {
-      listeners.delete(setEntries);
+      listeners.delete(setToasts);
     };
   }, []);
 
-  if (entries.length === 0) return null;
+  if (toasts.length === 0) return null;
 
   return (
     <View
       pointerEvents="box-none"
       style={[styles.host, { bottom: bottomOffset + tokens.spacing * 4 }]}
     >
-      {entries.map((entry) => (
-        <Toast key={entry.id} entry={entry} styles={styles} />
+      {toasts.map((toastEntry) => (
+        <Toast key={toastEntry.id} toastEntry={toastEntry} styles={styles} />
       ))}
     </View>
   );
 }
 
 function Toast({
-  entry,
+  toastEntry,
   styles,
 }: {
-  entry: ToastEntry;
+  toastEntry: ToastEntry;
   styles: ReturnType<typeof buildStyles>;
 }) {
-  const { id, message } = entry;
+  const { id, message } = toastEntry;
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility(message);

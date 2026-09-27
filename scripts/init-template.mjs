@@ -50,12 +50,12 @@ const BINARY =
   /\.(png|jpe?g|gif|webp|avif|ico|icns|ttf|otf|woff2?|mp4|mov|zip|gz|pdf|sqlite3?|db|keystore|jks)$/i;
 
 function* walk(dir, matches) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.isDirectory()) {
-      if (!IGNORED_DIRS.has(entry.name))
-        yield* walk(path.join(dir, entry.name), matches);
-    } else if (matches(entry.name)) {
-      yield path.join(dir, entry.name);
+  for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (dirent.isDirectory()) {
+      if (!IGNORED_DIRS.has(dirent.name))
+        yield* walk(path.join(dir, dirent.name), matches);
+    } else if (matches(dirent.name)) {
+      yield path.join(dir, dirent.name);
     }
   }
 }
@@ -84,11 +84,11 @@ function sortDependencyBlocks() {
     const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
     let changed = false;
     for (const block of blocks) {
-      const entries = Object.entries(pkg[block] ?? {});
-      const sorted = entries.toSorted(([a], [b]) =>
+      const dependencies = Object.entries(pkg[block] ?? {});
+      const sorted = dependencies.toSorted(([a], [b]) =>
         a < b ? -1 : a > b ? 1 : 0,
       );
-      if (sorted.some(([key], i) => key !== entries[i][0])) {
+      if (sorted.some(([key], i) => key !== dependencies[i][0])) {
         pkg[block] = Object.fromEntries(sorted);
         changed = true;
       }
@@ -125,10 +125,10 @@ function slugify(value) {
 
 async function ask(question, fallback, validate) {
   for (;;) {
-    const raw = rl
+    const typed = rl
       ? await rl.question(`${question} (${fallback}): `)
       : (pipedAnswers.shift() ?? "");
-    const trimmed = raw.trim();
+    const trimmed = typed.trim();
     const answer = trimmed.length > 0 ? trimmed : fallback;
     const problem = validate?.(answer);
     if (!problem) return answer;

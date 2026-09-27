@@ -9,10 +9,10 @@ const sourceRoots = [
 ];
 
 const listTsxFiles = (directory) =>
-  readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) return listTsxFiles(path);
-    return entry.name.endsWith(".tsx") && !entry.name.endsWith(".test.tsx")
+  readdirSync(directory, { withFileTypes: true }).flatMap((dirent) => {
+    const path = join(directory, dirent.name);
+    if (dirent.isDirectory()) return listTsxFiles(path);
+    return dirent.name.endsWith(".tsx") && !dirent.name.endsWith(".test.tsx")
       ? [path]
       : [];
   });

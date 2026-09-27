@@ -20,8 +20,8 @@ export const renderChildren = (
   children: ReactNode,
   style: TextStyle,
 ): ReactNode => {
-  const items = Children.toArray(children);
-  if (!items.some(isPrimitive)) return children;
+  const childNodes = Children.toArray(children);
+  if (!childNodes.some(isPrimitive)) return children;
 
   const output: ReactNode[] = [];
   let run: (string | number)[] = [];
@@ -36,13 +36,13 @@ export const renderChildren = (
     run = [];
   };
 
-  for (const item of items) {
-    if (isPrimitive(item)) {
-      run.push(item);
+  for (const child of childNodes) {
+    if (isPrimitive(child)) {
+      run.push(child);
       continue;
     }
     flush();
-    output.push(<Fragment key={`node-${output.length}`}>{item}</Fragment>);
+    output.push(<Fragment key={`node-${output.length}`}>{child}</Fragment>);
   }
   flush();
 
